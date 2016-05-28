@@ -465,6 +465,16 @@ void renderScene() {
 
 void updateState() {
 
+    if (leftPressed) {
+        leftPressed = false; // Simula um "delay" pois a rotacao estava muito rapida.
+		roty -= 90.0f;
+	}
+
+	if (rightPressed) {
+        rightPressed = false; // Simula um "delay" pois a rotacao estava muito rapida.
+		roty += 90.0f;
+	}
+
 	if (upPressed || downPressed) {
 
 		if (running) {
@@ -577,7 +587,7 @@ void onMouseMove(int x, int y) {
 Mouse move with no button pressed event handler
 */
 void onMousePassiveMove(int x, int y) {
-
+/*
 	roty += (x - mouseLastX);
 
 	rotx -= (y - mouseLastY);
@@ -592,7 +602,7 @@ void onMousePassiveMove(int x, int y) {
 
 	mouseLastX = x;
 	mouseLastY = y;
-
+*/
 	//glutPostRedisplay();
 }
 
