@@ -206,9 +206,14 @@ Atualiza a posição e orientação da camera
 */
 void updateCam() {
 
+    gluLookAt(posX,posY+5,posZ,
+		posX + sin(roty*PI/180),posY + posYOffset + 0.025 * std::abs(sin(headPosAux*PI/180)) + cos(rotx*PI/180),posZ -cos(roty*PI/180),
+		0.0,1.0,0.0);
+	/*
 	gluLookAt(posX,posY + posYOffset + 0.025 * std::abs(sin(headPosAux*PI/180)),posZ,
 		posX + sin(roty*PI/180),posY + posYOffset + 0.025 * std::abs(sin(headPosAux*PI/180)) + cos(rotx*PI/180),posZ -cos(roty*PI/180),
 		0.0,1.0,0.0);
+    */
 
 	// atualiza a posição do listener e da origen do som, são as mesmas da camera, já que os passos vem de onde o personagem está
 	listenerPos[0] = posX;
@@ -517,18 +522,6 @@ void updateState() {
 		speedY -= gravity;
 	}
 
-	if (crouched) {
-		posYOffset -= 0.01;
-		if (posYOffset < 0.1) {
-			posYOffset = 0.1;
-		}
-	} else {
-		posYOffset += 0.01;
-		if (posYOffset > 0.2) {
-			posYOffset = 0.2;
-		}
-	}
-
 }
 
 /**
@@ -635,7 +628,7 @@ void onKeyDown(unsigned char key, int x, int y) {
 			rightPressed = true;
 			break;
 		case 99: //c
-			crouched = true;
+			//crouched = true;
 			break;
 		case 114: //r
 			running = true;
@@ -671,7 +664,7 @@ void onKeyUp(unsigned char key, int x, int y) {
 			rightPressed = false;
 			break;
 		case 99: //c
-			crouched = false;
+			//crouched = false;
 			break;
 		case 114: //r
 			running = false;
