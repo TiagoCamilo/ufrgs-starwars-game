@@ -49,9 +49,45 @@ seja uma spotlight;
 #define SMOOTH_MATERIAL 1
 #define SMOOTH_MATERIAL_TEXTURE 2
 
+
+// Constantes do mapa
+#define VAZIO 0
+#define BLOCO 1
+#define RACHADURA 2
+#define BURACO 3
+#define INIMIGO 4
+#define JOGADOR 5
+
+#define COR_VAZIO_R 255
+#define COR_VAZIO_G 255
+#define COR_VAZIO_B 255
+
+#define COR_BLOCO_R 0
+#define COR_BLOCO_G 255
+#define COR_BLOCO_B 0
+
+#define COR_RACHADURA_R 128
+#define COR_RACHADURA_G 64
+#define COR_RACHADURA_B 64
+
+#define COR_BURACO_R 128
+#define COR_BURACO_G 0
+#define COR_BURACO_B 0
+
+#define COR_INIMIGO_R 255
+#define COR_INIMIGO_G 0
+#define COR_INIMIGO_B 0
+
+#define COR_JOGADOR_R 0
+#define COR_JOGADOR_G 0
+#define COR_JOGADOR_B 255
+
+
 void mainInit();
 void initSound();
 void initTexture();
+void initMap();
+void debugMap();
 void initModel();
 void initLight();
 void enableFog();
@@ -162,6 +198,8 @@ float posYOffset = 0.2;
 
 float backgrundColor[4] = {0.0f,0.0f,0.0f,1.0f};
 
+int mapaElementos[20][20];
+
 GLMmodel *modelSphere;
 
 // Aux function to load the object using GLM and apply some functions
@@ -266,6 +304,10 @@ void mainInit() {
 
     initTexture();
 
+    initMap();
+
+    debugMap();
+
 	initModel();
 
 	initLight();
@@ -350,6 +392,74 @@ void initSound() {
 	printf("Sound ok! \n\n");
 }
 
+
+void initMap(void)
+{
+    printf ("\nLoading map..\n");
+    // Load a texture object (256x256 true color)
+    bits = LoadDIBitmap("mapa.bmp", &info);
+    if (bits == (GLubyte *)0) {
+		printf ("Error loading file!\n\n");
+		return;
+	}
+
+    // Create an RGBA image
+    rgba = (GLubyte *)malloc(info->bmiHeader.biWidth * info->bmiHeader.biHeight * 4);
+
+    i = info->bmiHeader.biWidth * info->bmiHeader.biHeight - 1;
+
+    rgbaptr = rgba;
+    ptr = bits;
+    int j,k;
+    for(j = 0 ; j < 20 ; j++){
+        for(k = 0 ; k < 20 ; k++){
+            //for( rgbaptr = rgba, ptr = bits;  i >= 0; i--, rgbaptr += 4, ptr += 3)
+            //{
+                    rgbaptr[0] = ptr[2];     // windows BMP = BGR
+                    rgbaptr[1] = ptr[1];
+                    rgbaptr[2] = ptr[0];
+                    rgbaptr[3] = (ptr[0] + ptr[1] + ptr[2]) / 3;
+
+                    mapaElementos[j][k] = VAZIO; // Valor padrao do elemento
+
+                    if( rgbaptr[0] == COR_BLOCO_R && rgbaptr[1] == COR_BLOCO_G && rgbaptr[2] == COR_BLOCO_B){
+                        mapaElementos[j][k] = BLOCO;
+                    }
+                    if( rgbaptr[0] == COR_RACHADURA_R && rgbaptr[1] == COR_RACHADURA_G && rgbaptr[2] == COR_RACHADURA_B){
+                        mapaElementos[j][k] = RACHADURA;
+                    }
+                    if( rgbaptr[0] == COR_INIMIGO_R && rgbaptr[1] == COR_INIMIGO_G && rgbaptr[2] == COR_INIMIGO_B){
+                        mapaElementos[j][k] = INIMIGO;
+                    }
+                    if( rgbaptr[0] == COR_BURACO_R && rgbaptr[1] == COR_BURACO_G && rgbaptr[2] == COR_BURACO_B){
+                        mapaElementos[j][k] = BURACO;
+                    }
+                    if( rgbaptr[0] == COR_JOGADOR_R && rgbaptr[1] == COR_JOGADOR_G && rgbaptr[2] == COR_JOGADOR_B){
+                        mapaElementos[j][k] = JOGADOR;
+                    }
+
+                    i--;
+                    rgbaptr += 4;
+                    ptr += 3;
+
+            //}
+        }
+    }
+    	printf("map ok! \n\n");
+
+}
+
+void debugMap(){
+    int i,j;
+    for(i = 0 ; i < 20 ; i++){
+        for(j = 0 ; j < 20 ; j++){
+            if(mapaElementos[i][j] != VAZIO && mapaElementos[i][j] != BLOCO){
+                printf("%d \t %d \t\t %d \n",i,j,mapaElementos[i][j]);
+            }
+        }
+    }
+}
+
 /**
 Initialize the texture using the library bitmap
 */
@@ -417,8 +527,8 @@ void renderFloor() {
 	float textureScaleX = 10.0;
 	float textureScaleY = 10.0;
     glColor4f(1.0f,1.0f,1.0f,1.0f);
-    int xQuads = 40;
-    int zQuads = 40;
+    int xQuads = 20;
+    int zQuads = 20;
     for (int i = 0; i < xQuads; i++) {
         for (int j = 0; j < zQuads; j++) {
             glBegin(GL_QUADS);
@@ -482,13 +592,8 @@ void updateState() {
 
 	if (upPressed || downPressed) {
 
-		if (running) {
-			speedX = 0.05 * sin(roty*PI/180) * 2;
-			speedZ = -0.05 * cos(roty*PI/180) * 2;
-		} else {
-			speedX = 0.05 * sin(roty*PI/180);
-			speedZ = -0.05 * cos(roty*PI/180);
-		}
+        speedX = 0.05 * sin(roty*PI/180);
+        speedZ = -0.05 * cos(roty*PI/180);
 
 		// efeito de "sobe e desce" ao andar
 		headPosAux += 8.5f;
