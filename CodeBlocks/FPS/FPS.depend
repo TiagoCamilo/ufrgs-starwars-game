@@ -1,0 +1,764 @@
+# depslib dependency file v1.0
+1334590542 source:c:\users\guilherme\desktop\pratica 4 fps\src\main.cpp
+	<windows.h>
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	<cmath>
+	<iostream>
+	<gl/glut.h>
+	<al/alut.h>
+
+976674172 c:\users\guilherme\desktop\pratica 4 fps\codeblocks\include\gl\glut.h
+	<windows.h>
+	<GL/gl.h>
+	<GL/glu.h>
+
+1307692032 c:\users\guilherme\desktop\pratica 4 fps\codeblocks\include\gl\freeglut_std.h
+	<windows.h>
+	<GL/gl.h>
+	<GL/glu.h>
+	<stdlib.h>
+
+1254353242 c:\users\guilherme\desktop\pratica 4 fps\codeblocks\include\gl\gl.h
+
+1254353242 c:\users\guilherme\desktop\pratica 4 fps\codeblocks\include\gl\glu.h
+	<GL/gl.h>
+
+1334588768 c:\users\guilherme\desktop\pratica 4 fps\codeblocks\include\al\alut.h
+	<al/alc.h>
+	<al/al.h>
+	<OpenAL/alc.h>
+	<OpenAL/al.h>
+	<AL/al.h>
+	<AL/alc.h>
+
+1176490968 c:\users\guilherme\desktop\pratica 4 fps\codeblocks\include\al\alc.h
+
+1165602658 c:\users\guilherme\desktop\pratica 4 fps\codeblocks\include\al\al.h
+
+1150220762 source:c:\users\guilherme\desktop\pratica 4 fps\src\bitmap.c
+	"bitmap.h"
+	<stdio.h>
+	<stdlib.h>
+	<errno.h>
+
+1032704640 c:\users\guilherme\desktop\pratica 4 fps\src\bitmap.h
+	<GL/glut.h>
+	<windows.h>
+	<wingdi.h>
+
+1150220762 source:c:\users\guilherme\desktop\html\pratica4_arquivos\src\bitmap.c
+	"bitmap.h"
+	<stdio.h>
+	<stdlib.h>
+	<errno.h>
+
+1032704640 c:\users\guilherme\desktop\html\pratica4_arquivos\src\bitmap.h
+	<GL/glut.h>
+	<windows.h>
+	<wingdi.h>
+
+976674172 c:\users\guilherme\desktop\html\pratica4_arquivos\codeblocks\include\gl\glut.h
+	<windows.h>
+	<GL/gl.h>
+	<GL/glu.h>
+
+1254353242 c:\users\guilherme\desktop\html\pratica4_arquivos\codeblocks\include\gl\gl.h
+
+1254353242 c:\users\guilherme\desktop\html\pratica4_arquivos\codeblocks\include\gl\glu.h
+	<GL/gl.h>
+
+1150220762 source:c:\users\guilherme\desktop\pratica 5 iluminacao\pratica5\src\bitmap.c
+	"bitmap.h"
+	<stdio.h>
+	<stdlib.h>
+	<errno.h>
+
+1032704640 c:\users\guilherme\desktop\pratica 5 iluminacao\pratica5\src\bitmap.h
+	<GL/glut.h>
+	<windows.h>
+	<wingdi.h>
+
+976674172 c:\users\guilherme\desktop\pratica 5 iluminacao\pratica5\codeblocks\include\gl\glut.h
+	<windows.h>
+	<GL/gl.h>
+	<GL/glu.h>
+
+1254353242 c:\users\guilherme\desktop\pratica 5 iluminacao\pratica5\codeblocks\include\gl\gl.h
+
+1254353242 c:\users\guilherme\desktop\pratica 5 iluminacao\pratica5\codeblocks\include\gl\glu.h
+	<GL/gl.h>
+
+1336325103 source:c:\users\guilherme\desktop\pratica 5 iluminacao\pratica5\src\modelal.cpp
+	<windows.h>
+	<gl/glut.h>
+	"ModelAl.h"
+	"Vetor3D.h"
+
+1336154952 c:\users\guilherme\desktop\pratica 5 iluminacao\pratica5\src\modelal.h
+	<stdio.h>
+	<string.h>
+	"3DObject.h"
+	"Sphere.h"
+	<vector>
+
+1336154924 c:\users\guilherme\desktop\pratica 5 iluminacao\pratica5\src\3dobject.h
+	<string.h>
+	"glm.h"
+
+1336323785 c:\users\guilherme\desktop\pratica 5 iluminacao\pratica5\src\glm.h
+	<GLUT/glut.h>
+	<GL/glut.h>
+	<iostream>
+	<gl/glut.h>
+
+1336154914 c:\users\guilherme\desktop\pratica 5 iluminacao\pratica5\src\sphere.h
+	<string.h>
+	<gl/glut.h>
+
+1323085738 c:\users\guilherme\desktop\pratica 5 iluminacao\pratica5\src\vetor3d.h
+
+1336325122 source:c:\users\guilherme\desktop\pratica 5 iluminacao\pratica5\src\sphere.cpp
+	<windows.h>
+	<gl/glut.h>
+	"Vetor3D.h"
+	"Sphere.h"
+	<math.h>
+
+1323085738 source:c:\users\guilherme\desktop\pratica 5 iluminacao\pratica5\src\vetor3d.cpp
+	"Vetor3D.h"
+	<math.h>
+
+1336324841 source:c:\users\guilherme\desktop\pratica 5 iluminacao\pratica5\src\glm.cpp
+	<windows.h>
+	<math.h>
+	<cmath>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<assert.h>
+	"glm.h"
+
+1336341061 source:c:\users\guilherme\desktop\pratica 5 iluminacao\pratica5\src\main.cpp
+	<windows.h>
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	<cmath>
+	<iostream>
+	<gl/glut.h>
+	<al/alut.h>
+	"bitmap.h"
+	"ModelAl.h"
+	"3DObject.h"
+
+1334588768 c:\users\guilherme\desktop\pratica 5 iluminacao\pratica5\codeblocks\include\al\alut.h
+	<al/alc.h>
+	<al/al.h>
+	<OpenAL/alc.h>
+	<OpenAL/al.h>
+	<AL/al.h>
+	<AL/alc.h>
+
+1176490968 c:\users\guilherme\desktop\pratica 5 iluminacao\pratica5\codeblocks\include\al\alc.h
+
+1165602658 c:\users\guilherme\desktop\pratica 5 iluminacao\pratica5\codeblocks\include\al\al.h
+
+1336151164 source:c:\users\guilherme\desktop\pratica 5 iluminacao\pratica5\src\3dobject.cpp
+	"3DObject.h"
+	<malloc.h>
+
+1336161964 source:d:\ppgc - mestrado\primeiro semestre\fcg\pratica5\pratica 5 iluminacao\pratica5\src\3dobject.cpp
+	"3DObject.h"
+	<malloc.h>
+
+1336165724 d:\ppgc - mestrado\primeiro semestre\fcg\pratica5\pratica 5 iluminacao\pratica5\src\3dobject.h
+	<string.h>
+	"glm.h"
+
+1336334584 d:\ppgc - mestrado\primeiro semestre\fcg\pratica5\pratica 5 iluminacao\pratica5\src\glm.h
+	<GLUT/glut.h>
+	<GL/glut.h>
+	<iostream>
+	<gl/glut.h>
+
+976684972 d:\ppgc - mestrado\primeiro semestre\fcg\pratica5\pratica 5 iluminacao\pratica5\codeblocks\include\gl\glut.h
+	<windows.h>
+	<GL/gl.h>
+	<GL/glu.h>
+
+1254364042 d:\ppgc - mestrado\primeiro semestre\fcg\pratica5\pratica 5 iluminacao\pratica5\codeblocks\include\gl\gl.h
+
+1254364042 d:\ppgc - mestrado\primeiro semestre\fcg\pratica5\pratica 5 iluminacao\pratica5\codeblocks\include\gl\glu.h
+	<GL/gl.h>
+
+1150231562 source:d:\ppgc - mestrado\primeiro semestre\fcg\pratica5\pratica 5 iluminacao\pratica5\src\bitmap.c
+	"bitmap.h"
+	<stdio.h>
+	<stdlib.h>
+	<errno.h>
+
+1032715440 d:\ppgc - mestrado\primeiro semestre\fcg\pratica5\pratica 5 iluminacao\pratica5\src\bitmap.h
+	<GL/glut.h>
+	<windows.h>
+	<wingdi.h>
+
+1336335640 source:d:\ppgc - mestrado\primeiro semestre\fcg\pratica5\pratica 5 iluminacao\pratica5\src\glm.cpp
+	<windows.h>
+	<math.h>
+	<cmath>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<assert.h>
+	"glm.h"
+
+1399334026 source:d:\ppgc - mestrado\primeiro semestre\fcg\pratica5\pratica 5 iluminacao\pratica5\src\main.cpp
+	<windows.h>
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	<cmath>
+	<iostream>
+	<gl/glut.h>
+	<al/alut.h>
+	"bitmap.h"
+	"ModelAl.h"
+	"3DObject.h"
+
+1334599568 d:\ppgc - mestrado\primeiro semestre\fcg\pratica5\pratica 5 iluminacao\pratica5\codeblocks\include\al\alut.h
+	<al/alc.h>
+	<al/al.h>
+	<OpenAL/alc.h>
+	<OpenAL/al.h>
+	<AL/al.h>
+	<AL/alc.h>
+
+1176501768 d:\ppgc - mestrado\primeiro semestre\fcg\pratica5\pratica 5 iluminacao\pratica5\codeblocks\include\al\alc.h
+
+1165613458 d:\ppgc - mestrado\primeiro semestre\fcg\pratica5\pratica 5 iluminacao\pratica5\codeblocks\include\al\al.h
+
+1336165752 d:\ppgc - mestrado\primeiro semestre\fcg\pratica5\pratica 5 iluminacao\pratica5\src\modelal.h
+	<stdio.h>
+	<string.h>
+	"3DObject.h"
+	"Sphere.h"
+	<vector>
+
+1336165714 d:\ppgc - mestrado\primeiro semestre\fcg\pratica5\pratica 5 iluminacao\pratica5\src\sphere.h
+	<string.h>
+	<gl/glut.h>
+
+1336335902 source:d:\ppgc - mestrado\primeiro semestre\fcg\pratica5\pratica 5 iluminacao\pratica5\src\modelal.cpp
+	<windows.h>
+	<gl/glut.h>
+	"ModelAl.h"
+	"Vetor3D.h"
+
+1323096538 d:\ppgc - mestrado\primeiro semestre\fcg\pratica5\pratica 5 iluminacao\pratica5\src\vetor3d.h
+
+1336335922 source:d:\ppgc - mestrado\primeiro semestre\fcg\pratica5\pratica 5 iluminacao\pratica5\src\sphere.cpp
+	<windows.h>
+	<gl/glut.h>
+	"Vetor3D.h"
+	"Sphere.h"
+	<math.h>
+
+1323096538 source:d:\ppgc - mestrado\primeiro semestre\fcg\pratica5\pratica 5 iluminacao\pratica5\src\vetor3d.cpp
+	"Vetor3D.h"
+	<math.h>
+
+1399349091 source:c:\users\dgb\desktop\pratica5\pratica 5 iluminacao\pratica5\src\3dobject.cpp
+	"3DObject.h"
+	<malloc.h>
+
+1399349091 c:\users\dgb\desktop\pratica5\pratica 5 iluminacao\pratica5\src\3dobject.h
+	<string.h>
+	"glm.h"
+
+1398812018 c:\users\dgb\desktop\pratica5\pratica 5 iluminacao\pratica5\src\glm.h
+	<GLUT/glut.h>
+	<GL/gl.h>
+	<GL/glut.h>
+
+976684972 c:\users\dgb\desktop\pratica5\pratica 5 iluminacao\pratica5\codeblocks\include\gl\glut.h
+	<windows.h>
+	<GL/gl.h>
+	<GL/glu.h>
+
+1301111164 c:\users\dgb\desktop\pratica5\pratica 5 iluminacao\pratica5\codeblocks\include\gl\gl.h
+
+1301111164 c:\users\dgb\desktop\pratica5\pratica 5 iluminacao\pratica5\codeblocks\include\gl\glu.h
+	<stddef.h>
+	<GL/gl.h>
+
+1150231562 source:c:\users\dgb\desktop\pratica5\pratica 5 iluminacao\pratica5\src\bitmap.c
+	"bitmap.h"
+	<stdio.h>
+	<stdlib.h>
+	<errno.h>
+
+1032715440 c:\users\dgb\desktop\pratica5\pratica 5 iluminacao\pratica5\src\bitmap.h
+	<GL/glut.h>
+	<windows.h>
+	<wingdi.h>
+
+1398812020 source:c:\users\dgb\desktop\pratica5\pratica 5 iluminacao\pratica5\src\glm.cpp
+	<math.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<assert.h>
+	"glm.h"
+
+1399354413 source:c:\users\dgb\desktop\pratica5\pratica 5 iluminacao\pratica5\src\main.cpp
+	<windows.h>
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	<cmath>
+	<iostream>
+	<gl/glut.h>
+	<al/alut.h>
+	"bitmap.h"
+	"3DObject.h"
+
+1334599568 c:\users\dgb\desktop\pratica5\pratica 5 iluminacao\pratica5\codeblocks\include\al\alut.h
+	<al/alc.h>
+	<al/al.h>
+	<OpenAL/alc.h>
+	<OpenAL/al.h>
+	<AL/al.h>
+	<AL/alc.h>
+
+1176501768 c:\users\dgb\desktop\pratica5\pratica 5 iluminacao\pratica5\codeblocks\include\al\alc.h
+
+1165613458 c:\users\dgb\desktop\pratica5\pratica 5 iluminacao\pratica5\codeblocks\include\al\al.h
+
+1336165752 c:\users\dgb\desktop\pratica5\pratica 5 iluminacao\pratica5\src\modelal.h
+	<stdio.h>
+	<string.h>
+	"3DObject.h"
+	"Sphere.h"
+	<vector>
+
+1336165714 c:\users\dgb\desktop\pratica5\pratica 5 iluminacao\pratica5\src\sphere.h
+	<string.h>
+	<gl/glut.h>
+
+1336335902 source:c:\users\dgb\desktop\pratica5\pratica 5 iluminacao\pratica5\src\modelal.cpp
+	<windows.h>
+	<gl/glut.h>
+	"ModelAl.h"
+	"Vetor3D.h"
+
+1323096538 c:\users\dgb\desktop\pratica5\pratica 5 iluminacao\pratica5\src\vetor3d.h
+
+1336335922 source:c:\users\dgb\desktop\pratica5\pratica 5 iluminacao\pratica5\src\sphere.cpp
+	<windows.h>
+	<gl/glut.h>
+	"Vetor3D.h"
+	"Sphere.h"
+	<math.h>
+
+1323096538 source:c:\users\dgb\desktop\pratica5\pratica 5 iluminacao\pratica5\src\vetor3d.cpp
+	"Vetor3D.h"
+	<math.h>
+
+1398812008 c:\users\dgb\desktop\pratica5\pratica 5 iluminacao\pratica5\src\vector3f.h
+	<cmath>
+
+1399353128 source:c:\users\dgb\desktop\pratica5\pratica 5 iluminacao\pratica5\src\glmimg.cpp
+	<string.h>
+	<math.h>
+	"Texture.h"
+	<windows.h>
+	<GL/gl.h>
+	"glm.h"
+
+1398812010 c:\users\dgb\desktop\pratica5\pratica 5 iluminacao\pratica5\src\texture.h
+	<windows.h>
+	<windowsx.h>
+	<stdlib.h>
+	<stdio.h>
+	<GL/glut.h>
+	<math.h>
+
+1398812012 source:c:\users\dgb\desktop\pratica5\pratica 5 iluminacao\pratica5\src\texture.cpp
+	"Texture.h"
+
+1399349091 source:c:\users\dgb\desktop\pratica4_source_files\src\3dobject.cpp
+	"3DObject.h"
+	<malloc.h>
+
+1399349091 c:\users\dgb\desktop\pratica4_source_files\src\3dobject.h
+	<string.h>
+	"glm.h"
+
+1398812018 c:\users\dgb\desktop\pratica4_source_files\src\glm.h
+	<GLUT/glut.h>
+	<GL/gl.h>
+	<GL/glut.h>
+
+1301111164 c:\users\dgb\desktop\pratica4_source_files\codeblocks\include\gl\gl.h
+
+976684972 c:\users\dgb\desktop\pratica4_source_files\codeblocks\include\gl\glut.h
+	<windows.h>
+	<GL/gl.h>
+	<GL/glu.h>
+
+1301111164 c:\users\dgb\desktop\pratica4_source_files\codeblocks\include\gl\glu.h
+	<stddef.h>
+	<GL/gl.h>
+
+1150231562 source:c:\users\dgb\desktop\pratica4_source_files\src\bitmap.c
+	"bitmap.h"
+	<stdio.h>
+	<stdlib.h>
+	<errno.h>
+
+1032715440 c:\users\dgb\desktop\pratica4_source_files\src\bitmap.h
+	<GL/glut.h>
+	<windows.h>
+	<wingdi.h>
+
+1398812020 source:c:\users\dgb\desktop\pratica4_source_files\src\glm.cpp
+	<math.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<assert.h>
+	"glm.h"
+
+1399353128 source:c:\users\dgb\desktop\pratica4_source_files\src\glmimg.cpp
+	<string.h>
+	<math.h>
+	"Texture.h"
+	<windows.h>
+	<GL/gl.h>
+	"glm.h"
+
+1398812010 c:\users\dgb\desktop\pratica4_source_files\src\texture.h
+	<windows.h>
+	<windowsx.h>
+	<stdlib.h>
+	<stdio.h>
+	<GL/glut.h>
+	<math.h>
+
+1398812012 source:c:\users\dgb\desktop\pratica4_source_files\src\texture.cpp
+	"Texture.h"
+
+1399358696 source:c:\users\dgb\desktop\pratica4_source_files\src\main.cpp
+	<windows.h>
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	<cmath>
+	<iostream>
+	<gl/glut.h>
+	<al/alut.h>
+	"bitmap.h"
+	"3DObject.h"
+
+1334599568 c:\users\dgb\desktop\pratica4_source_files\codeblocks\include\al\alut.h
+	<al/alc.h>
+	<al/al.h>
+	<OpenAL/alc.h>
+	<OpenAL/al.h>
+	<AL/al.h>
+	<AL/alc.h>
+
+1176501768 c:\users\dgb\desktop\pratica4_source_files\codeblocks\include\al\alc.h
+
+1165613458 c:\users\dgb\desktop\pratica4_source_files\codeblocks\include\al\al.h
+
+1150231562 source:d:\ppgc - doutorado\semestre 2015-2\fcg 2015-2\pratica 4\pratica4_source_files\src\bitmap.c
+	"bitmap.h"
+	<stdio.h>
+	<stdlib.h>
+	<errno.h>
+
+1032715440 d:\ppgc - doutorado\semestre 2015-2\fcg 2015-2\pratica 4\pratica4_source_files\src\bitmap.h
+	<GL/glut.h>
+	<windows.h>
+	<wingdi.h>
+
+976684972 d:\ppgc - doutorado\semestre 2015-2\fcg 2015-2\pratica 4\pratica4_source_files\codeblocks\include\gl\glut.h
+	<windows.h>
+	<GL/gl.h>
+	<GL/glu.h>
+
+1301111164 d:\ppgc - doutorado\semestre 2015-2\fcg 2015-2\pratica 4\pratica4_source_files\codeblocks\include\gl\gl.h
+
+1301111164 d:\ppgc - doutorado\semestre 2015-2\fcg 2015-2\pratica 4\pratica4_source_files\codeblocks\include\gl\glu.h
+	<stddef.h>
+	<GL/gl.h>
+
+1398812020 source:d:\ppgc - doutorado\semestre 2015-2\fcg 2015-2\pratica 4\pratica4_source_files\src\glm.cpp
+	<math.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<assert.h>
+	"glm.h"
+
+1398812018 d:\ppgc - doutorado\semestre 2015-2\fcg 2015-2\pratica 4\pratica4_source_files\src\glm.h
+	<GLUT/glut.h>
+	<GL/gl.h>
+	<GL/glut.h>
+
+1399353128 source:d:\ppgc - doutorado\semestre 2015-2\fcg 2015-2\pratica 4\pratica4_source_files\src\glmimg.cpp
+	<string.h>
+	<math.h>
+	"Texture.h"
+	<windows.h>
+	<GL/gl.h>
+	"glm.h"
+
+1398812010 d:\ppgc - doutorado\semestre 2015-2\fcg 2015-2\pratica 4\pratica4_source_files\src\texture.h
+	<windows.h>
+	<windowsx.h>
+	<stdlib.h>
+	<stdio.h>
+	<GL/glut.h>
+	<math.h>
+
+1398812012 source:d:\ppgc - doutorado\semestre 2015-2\fcg 2015-2\pratica 4\pratica4_source_files\src\texture.cpp
+	"Texture.h"
+
+1150260362 source:d:\ppgc - doutorado\semestre 2016-1\fcg-2016-1\pratica4_source_files\src\bitmap.c
+	"bitmap.h"
+	<stdio.h>
+	<stdlib.h>
+	<errno.h>
+
+1032744240 d:\ppgc - doutorado\semestre 2016-1\fcg-2016-1\pratica4_source_files\src\bitmap.h
+	<GL/glut.h>
+	<windows.h>
+	<wingdi.h>
+
+976710172 d:\ppgc - doutorado\semestre 2016-1\fcg-2016-1\pratica4_source_files\codeblocks\include\gl\glut.h
+	<windows.h>
+	<GL/gl.h>
+	<GL/glu.h>
+
+1301139964 d:\ppgc - doutorado\semestre 2016-1\fcg-2016-1\pratica4_source_files\codeblocks\include\gl\gl.h
+
+1301139964 d:\ppgc - doutorado\semestre 2016-1\fcg-2016-1\pratica4_source_files\codeblocks\include\gl\glu.h
+	<stddef.h>
+	<GL/gl.h>
+
+1398840820 source:d:\ppgc - doutorado\semestre 2016-1\fcg-2016-1\pratica4_source_files\src\glm.cpp
+	<math.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<assert.h>
+	"glm.h"
+
+1398840818 d:\ppgc - doutorado\semestre 2016-1\fcg-2016-1\pratica4_source_files\src\glm.h
+	<GLUT/glut.h>
+	<GL/gl.h>
+	<GL/glut.h>
+
+1399381928 source:d:\ppgc - doutorado\semestre 2016-1\fcg-2016-1\pratica4_source_files\src\glmimg.cpp
+	<string.h>
+	<math.h>
+	"Texture.h"
+	<windows.h>
+	<GL/gl.h>
+	"glm.h"
+
+1398840810 d:\ppgc - doutorado\semestre 2016-1\fcg-2016-1\pratica4_source_files\src\texture.h
+	<windows.h>
+	<windowsx.h>
+	<stdlib.h>
+	<stdio.h>
+	<GL/glut.h>
+	<math.h>
+
+1443530882 source:d:\ppgc - doutorado\semestre 2016-1\fcg-2016-1\pratica4_source_files\src\main.cpp
+	<windows.h>
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	<cmath>
+	<iostream>
+	<gl/glut.h>
+	"glm.h"
+	<al/alut.h>
+	"bitmap.h"
+
+1334628368 d:\ppgc - doutorado\semestre 2016-1\fcg-2016-1\pratica4_source_files\codeblocks\include\al\alut.h
+	<al/alc.h>
+	<al/al.h>
+	<OpenAL/alc.h>
+	<OpenAL/al.h>
+	<AL/al.h>
+	<AL/alc.h>
+
+1176530568 d:\ppgc - doutorado\semestre 2016-1\fcg-2016-1\pratica4_source_files\codeblocks\include\al\alc.h
+
+1165638658 d:\ppgc - doutorado\semestre 2016-1\fcg-2016-1\pratica4_source_files\codeblocks\include\al\al.h
+
+1398840812 source:d:\ppgc - doutorado\semestre 2016-1\fcg-2016-1\pratica4_source_files\src\texture.cpp
+	"Texture.h"
+
+1150260362 source:d:\ppgc - doutorado\semestre 2016-1\fcg-2016-1\pratica4_source_files_2016\src\bitmap.c
+	"bitmap.h"
+	<stdio.h>
+	<stdlib.h>
+	<errno.h>
+
+1032744240 d:\ppgc - doutorado\semestre 2016-1\fcg-2016-1\pratica4_source_files_2016\src\bitmap.h
+	<GL/glut.h>
+	<windows.h>
+	<wingdi.h>
+
+976710172 d:\ppgc - doutorado\semestre 2016-1\fcg-2016-1\pratica4_source_files_2016\codeblocks\include\gl\glut.h
+	<windows.h>
+	<GL/gl.h>
+	<GL/glu.h>
+
+1301139964 d:\ppgc - doutorado\semestre 2016-1\fcg-2016-1\pratica4_source_files_2016\codeblocks\include\gl\gl.h
+
+1301139964 d:\ppgc - doutorado\semestre 2016-1\fcg-2016-1\pratica4_source_files_2016\codeblocks\include\gl\glu.h
+	<stddef.h>
+	<GL/gl.h>
+
+1398840820 source:d:\ppgc - doutorado\semestre 2016-1\fcg-2016-1\pratica4_source_files_2016\src\glm.cpp
+	<math.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<assert.h>
+	"glm.h"
+
+1398840818 d:\ppgc - doutorado\semestre 2016-1\fcg-2016-1\pratica4_source_files_2016\src\glm.h
+	<GLUT/glut.h>
+	<GL/gl.h>
+	<GL/glut.h>
+
+1399381928 source:d:\ppgc - doutorado\semestre 2016-1\fcg-2016-1\pratica4_source_files_2016\src\glmimg.cpp
+	<string.h>
+	<math.h>
+	"Texture.h"
+	<windows.h>
+	<GL/gl.h>
+	"glm.h"
+
+1398840810 d:\ppgc - doutorado\semestre 2016-1\fcg-2016-1\pratica4_source_files_2016\src\texture.h
+	<windows.h>
+	<windowsx.h>
+	<stdlib.h>
+	<stdio.h>
+	<GL/glut.h>
+	<math.h>
+
+1398840812 source:d:\ppgc - doutorado\semestre 2016-1\fcg-2016-1\pratica4_source_files_2016\src\texture.cpp
+	"Texture.h"
+
+1462772497 source:d:\ppgc - doutorado\semestre 2016-1\fcg-2016-1\pratica4_source_files_2016\src\main.cpp
+	<windows.h>
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	<cmath>
+	<iostream>
+	<gl/glut.h>
+	"glm.h"
+	<al/alut.h>
+	"bitmap.h"
+
+1334628368 d:\ppgc - doutorado\semestre 2016-1\fcg-2016-1\pratica4_source_files_2016\codeblocks\include\al\alut.h
+	<al/alc.h>
+	<al/al.h>
+	<OpenAL/alc.h>
+	<OpenAL/al.h>
+	<AL/al.h>
+	<AL/alc.h>
+
+1176530568 d:\ppgc - doutorado\semestre 2016-1\fcg-2016-1\pratica4_source_files_2016\codeblocks\include\al\alc.h
+
+1165638658 d:\ppgc - doutorado\semestre 2016-1\fcg-2016-1\pratica4_source_files_2016\codeblocks\include\al\al.h
+
+1150260362 source:c:\users\tiago\desktop\trabalho computação grafica\computacaografica\src\bitmap.c
+	"bitmap.h"
+	<stdio.h>
+	<stdlib.h>
+	<errno.h>
+
+1032744240 c:\users\tiago\desktop\trabalho computação grafica\computacaografica\src\bitmap.h
+	<GL/glut.h>
+	<windows.h>
+	<wingdi.h>
+
+976710172 c:\users\tiago\desktop\trabalho computação grafica\computacaografica\codeblocks\include\gl\glut.h
+	<windows.h>
+	<GL/gl.h>
+	<GL/glu.h>
+
+1301139964 c:\users\tiago\desktop\trabalho computação grafica\computacaografica\codeblocks\include\gl\gl.h
+
+1301139964 c:\users\tiago\desktop\trabalho computação grafica\computacaografica\codeblocks\include\gl\glu.h
+	<stddef.h>
+	<GL/gl.h>
+
+1398840820 source:c:\users\tiago\desktop\trabalho computação grafica\computacaografica\src\glm.cpp
+	<math.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<assert.h>
+	"glm.h"
+
+1398840818 c:\users\tiago\desktop\trabalho computação grafica\computacaografica\src\glm.h
+	<GLUT/glut.h>
+	<GL/gl.h>
+	<GL/glut.h>
+
+1399381928 source:c:\users\tiago\desktop\trabalho computação grafica\computacaografica\src\glmimg.cpp
+	<string.h>
+	<math.h>
+	"Texture.h"
+	<windows.h>
+	<GL/gl.h>
+	"glm.h"
+
+1398840810 c:\users\tiago\desktop\trabalho computação grafica\computacaografica\src\texture.h
+	<windows.h>
+	<windowsx.h>
+	<stdlib.h>
+	<stdio.h>
+	<GL/glut.h>
+	<math.h>
+
+1462772805 source:c:\users\tiago\desktop\trabalho computação grafica\computacaografica\src\main.cpp
+	<windows.h>
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	<cmath>
+	<iostream>
+	<gl/glut.h>
+	"glm.h"
+	<al/alut.h>
+	"bitmap.h"
+
+1334628368 c:\users\tiago\desktop\trabalho computação grafica\computacaografica\codeblocks\include\al\alut.h
+	<al/alc.h>
+	<al/al.h>
+	<OpenAL/alc.h>
+	<OpenAL/al.h>
+	<AL/al.h>
+	<AL/alc.h>
+
+1176530568 c:\users\tiago\desktop\trabalho computação grafica\computacaografica\codeblocks\include\al\alc.h
+
+1165638658 c:\users\tiago\desktop\trabalho computação grafica\computacaografica\codeblocks\include\al\al.h
+
+1398840812 source:c:\users\tiago\desktop\trabalho computação grafica\computacaografica\src\texture.cpp
+	"Texture.h"
+
