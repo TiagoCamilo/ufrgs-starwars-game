@@ -201,7 +201,7 @@ float backgrundColor[4] = {0.0f,0.0f,0.0f,1.0f};
 
 int mapaElementos[20][20];
 
-GLMmodel *modelSphere;
+GLMmodel *modelSphere, *modelSphere2;
 
 // Aux function to load the object using GLM and apply some functions
 bool C3DObject_Load_New(const char *pszFilename, GLMmodel **model)
@@ -220,7 +220,7 @@ bool C3DObject_Load_New(const char *pszFilename, GLMmodel **model)
     return false;
 
     glmUnitize(*model);
-    //glmScale(model,sFactor); // USED TO SCALE THE OBJECT
+    glmScale(*model,0.3); // USED TO SCALE THE OBJECT
     glmFacetNormals(*model);
     glmVertexNormals(*model, 90.0);
 
@@ -263,7 +263,7 @@ void updateCam() {
 	source0Pos[2] = posZ;
 
     GLfloat light_position1[] = {posX, posY, posZ, 1.0 };
-    glLightfv(GL_LIGHT0, GL_POSITION, light_position1);
+    //glLightfv(GL_LIGHT0, GL_POSITION, light_position1);
 
 
 }
@@ -326,7 +326,8 @@ void mainInit() {
 
 void initModel() {
 	printf("Loading models.. \n");
-	C3DObject_Load_New("ball.obj",&modelSphere);
+	C3DObject_Load_New("qmark.obj",&modelSphere);
+	C3DObject_Load_New("ball.obj",&modelSphere2);
 	printf("Models ok. \n \n \n");
 }
 
@@ -533,7 +534,7 @@ void renderFloor() {
     for (int i = 0; i < xQuads; i++) {
         for (int j = 0; j < zQuads; j++) {
 
-            if(mapaElementos[i][j] == BURACO || mapaElementos[i][j] == VAZIO) continue;
+            if(mapaElementos[i][j] != JOGADOR && mapaElementos[i][j] != BLOCO) continue;
 
             glBegin(GL_QUADS);
                 glTexCoord2f(1.0f, 0.0f);   // coords for the texture
@@ -574,6 +575,11 @@ void renderScene() {
     glPushMatrix();
         glTranslatef(0.0,1.0,0.0);
         glmDraw(modelSphere, GLM_SMOOTH | GLM_MATERIAL | GLM_TEXTURE);
+	glPopMatrix();
+
+    glPushMatrix();
+        glTranslatef(posX,1.0,posZ);
+        glmDraw(modelSphere2, GLM_SMOOTH | GLM_MATERIAL | GLM_TEXTURE);
 	glPopMatrix();
 
     // binds the bmp file already loaded to the OpenGL parameters
