@@ -257,7 +257,7 @@ Atualiza a posição e orientação da camera
 */
 void updateCam() {
 
-    gluLookAt(posX,posY+10,posZ,
+    gluLookAt(posX,posY+30,posZ,
 		posX + sin(roty*PI/180),posY + posYOffset + 0.025 * std::abs(sin(headPosAux*PI/180)) + cos(rotx*PI/180),posZ -cos(roty*PI/180),
 		0.0,1.0,0.0);
 	/*
@@ -471,8 +471,8 @@ void debugMap(){
     int i,j;
     for(i = 0 ; i < 20 ; i++){
         for(j = 0 ; j < 20 ; j++){
-            if(mapaElementos[i][j] != VAZIO && mapaElementos[i][j] != BLOCO){
-                printf("%d \t %d \t\t %d \n",i,j,mapaElementos[i][j]);
+            if(mapaCenario[i][j] != VAZIO){
+                printf("%d \t %d \t\t %d \n",i,j,mapaCenario[i][j]);
             }
         }
     }
@@ -565,7 +565,7 @@ void renderFloor() {
     for (int i = 0; i < xQuads; i++) {
         for (int j = 0; j < zQuads; j++) {
 
-            if(mapaCenario[i][j] == VAZIO) continue;
+            if(mapaCenario[i][j] != BLOCO) continue;
 
             glBegin(GL_QUADS);
                 glTexCoord2f(1.0f, 0.0f);   // coords for the texture
@@ -842,7 +842,7 @@ void onKeyDown(unsigned char key, int x, int y) {
 
 	int i = posX+10;
 	int j = posZ+10;
-    printf("X: %f \t Z: %f \t\t I: %d \t J: %d \t Map: %d \n",posX,posZ,i,j,mapaElementos[i][j]);
+    printf("X: %f \t Z: %f \t\t I: %d \t J: %d \t Map: %d \n",posX,posZ,i,j,mapaCenario[i][j]);
 
 	//glutPostRedisplay();
 }
