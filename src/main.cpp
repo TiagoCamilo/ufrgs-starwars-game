@@ -181,8 +181,8 @@ ALvoid  *data;
 // parte de código extraído de "texture.c" por Michael Sweet (OpenGL SuperBible)
 // texture buffers and stuff
 int i;                       /* Looping var */
-BITMAPINFO	*info;           /* Bitmap information */
-GLubyte	    *bits;           /* Bitmap RGB pixels */
+BITMAPINFO	*info, *infoSuperior, *infoInferior;           /* Bitmap information */
+GLubyte	    *bits, *bitsSuperior, *bitsInferior;           /* Bitmap RGB pixels */
 GLubyte     *ptr;            /* Pointer into bit buffer */
 GLubyte	    *rgba;           /* RGBA pixel buffer */
 GLubyte	    *rgbaptr;        /* Pointer into RGBA buffer */
@@ -205,6 +205,7 @@ GLMmodel *modelSphere;
 
 
 int mapaElementos[20][20];
+int mapaCenario[20][20];
 
 typedef struct inimigo {
     int x;
@@ -416,55 +417,53 @@ void initSound() {
 void initMap(void){
     printf ("\nLoading map..\n");
     // Load a texture object (256x256 true color)
-    bits = LoadDIBitmap("mapa.bmp", &info);
-    if (bits == (GLubyte *)0) {
+    bitsInferior = LoadDIBitmap("mapaInferior.bmp", &infoInferior);
+    if (bitsInferior == (GLubyte *)0) {
 		printf ("Error loading file!\n\n");
 		return;
 	}
 
-    // Create an RGBA image
-    rgba = (GLubyte *)malloc(info->bmiHeader.biWidth * info->bmiHeader.biHeight * 4);
+    bitsSuperior = LoadDIBitmap("mapaSuperior.bmp", &infoSuperior);
+    if (bitsSuperior == (GLubyte *)0) {
+		printf ("Error loading file!\n\n");
+		return;
+	}
 
-    i = info->bmiHeader.biWidth * info->bmiHeader.biHeight - 1;
+    int iSuperior = infoSuperior->bmiHeader.biWidth * info->bmiHeader.biHeight - 1;
+    GLubyte *ptrSuperior = bitsSuperior;
 
-    rgbaptr = rgba;
-    ptr = bits;
+    int iInferior = infoInferior->bmiHeader.biWidth * info->bmiHeader.biHeight - 1;
+    GLubyte *ptrInferior = bitsInferior;
+
+
     int j,k;
     for(j = 0 ; j < 20 ; j++){
         for(k = 0 ; k < 20 ; k++){
-            //for( rgbaptr = rgba, ptr = bits;  i >= 0; i--, rgbaptr += 4, ptr += 3)
-            //{
-                    rgbaptr[0] = ptr[2];     // windows BMP = BGR
-                    rgbaptr[1] = ptr[1];
-                    rgbaptr[2] = ptr[0];
-                    rgbaptr[3] = (ptr[0] + ptr[1] + ptr[2]) / 3;
-
                     mapaElementos[j][k] = VAZIO; // Valor padrao do elemento
+                    mapaCenario[j][k] = VAZIO; // Valor padrao do cenario
 
-                    if( rgbaptr[0] == COR_BLOCO_R && rgbaptr[1] == COR_BLOCO_G && rgbaptr[2] == COR_BLOCO_B){
-                        mapaElementos[j][k] = BLOCO;
+                    if( ptrInferior[2] == COR_BLOCO_R && ptrInferior[1] == COR_BLOCO_G && ptrInferior[0] == COR_BLOCO_B){
+                        mapaCenario[j][k] = BLOCO;
                     }
-                    if( rgbaptr[0] == COR_RACHADURA_R && rgbaptr[1] == COR_RACHADURA_G && rgbaptr[2] == COR_RACHADURA_B){
+                    if( ptrSuperior[2] == COR_RACHADURA_R && ptrSuperior[1] == COR_RACHADURA_G && ptrSuperior[0] == COR_RACHADURA_B){
                         mapaElementos[j][k] = RACHADURA;
                     }
-                    if( rgbaptr[0] == COR_INIMIGO_R && rgbaptr[1] == COR_INIMIGO_G && rgbaptr[2] == COR_INIMIGO_B){
+                    if( ptrSuperior[2] == COR_INIMIGO_R && ptrSuperior[1] == COR_INIMIGO_G && ptrSuperior[0] == COR_INIMIGO_B){
                         mapaElementos[j][k] = INIMIGO;
                     }
-                    if( rgbaptr[0] == COR_BURACO_R && rgbaptr[1] == COR_BURACO_G && rgbaptr[2] == COR_BURACO_B){
+                    if( ptrSuperior[2] == COR_BURACO_R && ptrSuperior[1] == COR_BURACO_G && ptrSuperior[0] == COR_BURACO_B){
                         mapaElementos[j][k] = BURACO;
                     }
-                    if( rgbaptr[0] == COR_JOGADOR_R && rgbaptr[1] == COR_JOGADOR_G && rgbaptr[2] == COR_JOGADOR_B){
+                    if( ptrSuperior[2] == COR_JOGADOR_R && ptrSuperior[1] == COR_JOGADOR_G && ptrSuperior[0] == COR_JOGADOR_B){
                         mapaElementos[j][k] = JOGADOR;
                     }
-
-                    i--;
-                    rgbaptr += 4;
-                    ptr += 3;
-
-            //}
+                    iSuperior--;
+                    iInferior--;
+                    ptrSuperior += 3;
+                    ptrInferior += 3;
         }
     }
-    	printf("map ok! \n\n");
+    printf("map ok! \n\n");
 
 }
 
@@ -501,7 +500,7 @@ Initialize the texture using the library bitmap
 void initTexture(void){
     printf ("\nLoading texture..\n");
     // Load a texture object (256x256 true color)
-    bits = LoadDIBitmap("tiledbronze.bmp", &info);
+    bits = LoadDIBitmap("grama-textura.bmp", &info);
     if (bits == (GLubyte *)0) {
 		printf ("Error loading texture!\n\n");
 		return;
@@ -565,7 +564,7 @@ void renderFloor() {
     for (int i = 0; i < xQuads; i++) {
         for (int j = 0; j < zQuads; j++) {
 
-            if(mapaElementos[i][j] != BLOCO) continue;
+            if(mapaCenario[i][j] == VAZIO) continue;
 
             glBegin(GL_QUADS);
                 glTexCoord2f(1.0f, 0.0f);   // coords for the texture
@@ -655,11 +654,11 @@ void updateState() {
 
         int i = nextPosX + 10;
         int j = nextPosZ + 10;
-        if(mapaElementos[i][j] == BLOCO){
+        if(mapaCenario[i][j] == BLOCO){
             posX = nextPosX;
             posZ = nextPosZ;
         }else{
-            printf("\nColisao: %d",mapaElementos[i][j]);
+            printf("\nColisao: %d",mapaCenario[i][j]);
             nextPosX = posX;
             nextPosZ = posZ;
         }
