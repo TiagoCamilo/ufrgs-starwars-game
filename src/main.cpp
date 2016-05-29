@@ -82,11 +82,13 @@ seja uma spotlight;
 #define COR_JOGADOR_G 0
 #define COR_JOGADOR_B 255
 
+#define MAXIMO_INIMIGOS 10
 
 void mainInit();
 void initSound();
 void initTexture();
 void initMap();
+void initInimigos();
 void debugMap();
 void initModel();
 void initLight();
@@ -199,13 +201,22 @@ float posYOffset = 0.2;
 
 float backgrundColor[4] = {0.0f,0.0f,0.0f,1.0f};
 
+GLMmodel *modelSphere;
+
+
 int mapaElementos[20][20];
 
-GLMmodel *modelSphere, *modelSphere2;
+typedef struct inimigo {
+    int x;
+    int z;
+    GLMmodel *modelInimigo;
+} inimigo_t;
+
+inimigo_t *inimigo[MAXIMO_INIMIGOS];
+int quantidade_inimigos = -1;
 
 // Aux function to load the object using GLM and apply some functions
-bool C3DObject_Load_New(const char *pszFilename, GLMmodel **model)
-{
+bool C3DObject_Load_New(const char *pszFilename, GLMmodel **model){
     char aszFilename[256];
     strcpy(aszFilename, pszFilename);
 
@@ -309,6 +320,8 @@ void mainInit() {
 
     debugMap();
 
+    initInimigos();
+
 	initModel();
 
 	initLight();
@@ -326,8 +339,13 @@ void mainInit() {
 
 void initModel() {
 	printf("Loading models.. \n");
-	C3DObject_Load_New("qmark.obj",&modelSphere);
-	C3DObject_Load_New("ball.obj",&modelSphere2);
+
+	C3DObject_Load_New("ball.obj",&modelSphere);
+
+    int i;
+    for(i = 0 ; i <= quantidade_inimigos ; i++){
+        C3DObject_Load_New("qmark.obj",&inimigo[i]->modelInimigo);
+    }
 	printf("Models ok. \n \n \n");
 }
 
@@ -395,8 +413,7 @@ void initSound() {
 }
 
 
-void initMap(void)
-{
+void initMap(void){
     printf ("\nLoading map..\n");
     // Load a texture object (256x256 true color)
     bits = LoadDIBitmap("mapa.bmp", &info);
@@ -462,11 +479,26 @@ void debugMap(){
     }
 }
 
+void initInimigos(void)
+{
+    int i,j;
+    for(i = 0 ; i < 20 ; i++){
+        for(j = 0 ; j < 20 ; j++){
+            if(mapaElementos[i][j] == INIMIGO){
+                quantidade_inimigos++;
+                inimigo[quantidade_inimigos] = (inimigo_t*)malloc(sizeof(inimigo_t));
+                inimigo[quantidade_inimigos]->modelInimigo = NULL;
+                inimigo[quantidade_inimigos]->x = i-10;
+                inimigo[quantidade_inimigos]->z = j-10;
+            }
+        }
+    }
+}
+
 /**
 Initialize the texture using the library bitmap
 */
-void initTexture(void)
-{
+void initTexture(void){
     printf ("\nLoading texture..\n");
     // Load a texture object (256x256 true color)
     bits = LoadDIBitmap("tiledbronze.bmp", &info);
@@ -511,8 +543,7 @@ void initTexture(void)
 
 }
 
-void enableFog(void)
-{
+void enableFog(void){
 
 }
 
@@ -534,7 +565,7 @@ void renderFloor() {
     for (int i = 0; i < xQuads; i++) {
         for (int j = 0; j < zQuads; j++) {
 
-            if(mapaElementos[i][j] != JOGADOR && mapaElementos[i][j] != BLOCO) continue;
+            if(mapaElementos[i][j] != BLOCO) continue;
 
             glBegin(GL_QUADS);
                 glTexCoord2f(1.0f, 0.0f);   // coords for the texture
@@ -573,14 +604,17 @@ void renderScene() {
 	updateCam();
 
     glPushMatrix();
-        glTranslatef(0.0,1.0,0.0);
+        glTranslatef(posX,1.0,posZ);
         glmDraw(modelSphere, GLM_SMOOTH | GLM_MATERIAL | GLM_TEXTURE);
 	glPopMatrix();
 
-    glPushMatrix();
-        glTranslatef(posX,1.0,posZ);
-        glmDraw(modelSphere2, GLM_SMOOTH | GLM_MATERIAL | GLM_TEXTURE);
-	glPopMatrix();
+    int i;
+    for(i = 0 ; i <= quantidade_inimigos ; i++){
+        glPushMatrix();
+            glTranslatef(inimigo[i]->x,1.0,inimigo[i]->z);
+            glmDraw(inimigo[i]->modelInimigo, GLM_SMOOTH | GLM_MATERIAL | GLM_TEXTURE);
+        glPopMatrix();
+    }
 
     // binds the bmp file already loaded to the OpenGL parameters
     glBindTexture(type, texture);
