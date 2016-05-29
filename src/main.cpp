@@ -86,7 +86,7 @@ seja uma spotlight;
 
 void mainInit();
 void initSound();
-void initTexture();
+void initTexture(char *textureName);
 void initMap();
 void initInimigos();
 void debugMap();
@@ -187,7 +187,7 @@ GLubyte     *ptr;            /* Pointer into bit buffer */
 GLubyte	    *rgba;           /* RGBA pixel buffer */
 GLubyte	    *rgbaptr;        /* Pointer into RGBA buffer */
 GLubyte     temp;            /* Swapping variable */
-GLenum      type;            /* Texture type */
+GLenum      type,type2;            /* Texture type */
 GLuint      texture;         /* Texture object */
 
 
@@ -315,7 +315,7 @@ void mainInit() {
 
     initSound();
 
-    initTexture();
+    initTexture("grama-textura.bmp");
 
     initMap();
 
@@ -497,10 +497,10 @@ void initInimigos(void)
 /**
 Initialize the texture using the library bitmap
 */
-void initTexture(void){
+void initTexture(char *textureName){
     printf ("\nLoading texture..\n");
     // Load a texture object (256x256 true color)
-    bits = LoadDIBitmap("grama-textura.bmp", &info);
+    bits = LoadDIBitmap(textureName, &info);
     if (bits == (GLubyte *)0) {
 		printf ("Error loading texture!\n\n");
 		return;
@@ -533,8 +533,7 @@ void initTexture(void){
 	glTexParameteri(type, GL_TEXTURE_WRAP_S, GL_CLAMP);
     glTexParameteri(type, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
-    glTexImage2D(type, 0, 4, info->bmiHeader.biWidth, info->bmiHeader.biHeight,
-                  0, GL_RGBA, GL_UNSIGNED_BYTE, rgba );
+    glTexImage2D(type, 0, 4, info->bmiHeader.biWidth, info->bmiHeader.biHeight,0, GL_RGBA, GL_UNSIGNED_BYTE, rgba );
 
 
     printf("Textura %d\n", texture);
@@ -547,6 +546,8 @@ void enableFog(void){
 }
 
 void renderFloor() {
+    initTexture("grama-textura.bmp");
+
 	// set things up to render the floor with the texture
 	glShadeModel(GL_SMOOTH);
 	glEnable(type);
@@ -565,6 +566,56 @@ void renderFloor() {
         for (int j = 0; j < zQuads; j++) {
 
             if(mapaCenario[i][j] == VAZIO) continue;
+
+            glBegin(GL_QUADS);
+                glTexCoord2f(1.0f, 0.0f);   // coords for the texture
+                glNormal3f(0.0f,1.0f,0.0f);
+                glVertex3f(i * (float)planeSize/xQuads, 0.0f, (j+1) * (float)planeSize/zQuads);
+
+                glTexCoord2f(0.0f, 0.0f);  // coords for the texture
+                glNormal3f(0.0f,1.0f,0.0f);
+                glVertex3f((i+1) * (float)planeSize/xQuads, 0.0f, (j+1) * (float)planeSize/zQuads);
+
+                glTexCoord2f(0.0f, 1.0f);  // coords for the texture
+                glNormal3f(0.0f,1.0f,0.0f);
+                glVertex3f((i+1) * (float)planeSize/xQuads, 0.0f, j * (float)planeSize/zQuads);
+
+                glTexCoord2f(1.0f, 1.0f);  // coords for the texture
+                glNormal3f(0.0f,1.0f,0.0f);
+                glVertex3f(i * (float)planeSize/xQuads, 0.0f, j * (float)planeSize/zQuads);
+
+            glEnd();
+        }
+    }
+
+	glDisable(type);
+
+
+	glPopMatrix();
+}
+
+
+void renderWater() {
+    initTexture("agua-textura.bmp");
+
+	// set things up to render the floor with the texture
+	glShadeModel(GL_SMOOTH);
+	glEnable(type);
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
+	glPushMatrix();
+
+    glTranslatef(-(float)planeSize/2.0f, 0.0f, -(float)planeSize/2.0f);
+
+	float textureScaleX = 10.0;
+	float textureScaleY = 10.0;
+    glColor4f(1.0f,1.0f,1.0f,1.0f);
+    int xQuads = 20;
+    int zQuads = 20;
+    for (int i = 0; i < xQuads; i++) {
+        for (int j = 0; j < zQuads; j++) {
+
+            if(mapaCenario[i][j] != VAZIO) continue;
 
             glBegin(GL_QUADS);
                 glTexCoord2f(1.0f, 0.0f);   // coords for the texture
@@ -619,6 +670,7 @@ void renderScene() {
     glBindTexture(type, texture);
 
 	renderFloor();
+	renderWater();
 }
 
 void updateState() {
