@@ -144,6 +144,8 @@ float speedZ = 0.0f;
 float posX = 0.0f;
 float posY = 0.0f;
 float posZ = 2.0f;
+float nextPosX = 0.0f;
+float nextPosZ = 2.0f;
 
 /*
 variavel auxiliar pra dar variação na altura do ponto de vista ao andar.
@@ -152,7 +154,7 @@ float headPosAux = 0.0f;
 
 float maxSpeed = 0.25f;
 
-float planeSize = 8.0f;
+float planeSize = 20.0f;
 
 // more sound stuff (position, speed and orientation of the listener)
 ALfloat listenerPos[]={0.0,0.0,4.0};
@@ -190,7 +192,6 @@ GLuint      texture;         /* Texture object */
 
 bool crouched = false;
 bool running = false;
-bool jumping = false;
 float jumpSpeed = 0.06;
 float gravity = 0.004;
 float heightLimit = 0.2;
@@ -244,7 +245,7 @@ Atualiza a posição e orientação da camera
 */
 void updateCam() {
 
-    gluLookAt(posX,posY+5,posZ,
+    gluLookAt(posX,posY+10,posZ,
 		posX + sin(roty*PI/180),posY + posYOffset + 0.025 * std::abs(sin(headPosAux*PI/180)) + cos(rotx*PI/180),posZ -cos(roty*PI/180),
 		0.0,1.0,0.0);
 	/*
@@ -531,6 +532,9 @@ void renderFloor() {
     int zQuads = 20;
     for (int i = 0; i < xQuads; i++) {
         for (int j = 0; j < zQuads; j++) {
+
+            if(mapaElementos[i][j] == BURACO || mapaElementos[i][j] == VAZIO) continue;
+
             glBegin(GL_QUADS);
                 glTexCoord2f(1.0f, 0.0f);   // coords for the texture
                 glNormal3f(0.0f,1.0f,0.0f);
@@ -592,8 +596,8 @@ void updateState() {
 
 	if (upPressed || downPressed) {
 
-        speedX = 0.05 * sin(roty*PI/180);
-        speedZ = -0.05 * cos(roty*PI/180);
+        speedX = 0.25 * sin(roty*PI/180);
+        speedZ = -0.25 * cos(roty*PI/180);
 
 		// efeito de "sobe e desce" ao andar
 		headPosAux += 8.5f;
@@ -602,11 +606,22 @@ void updateState() {
 		}
 
         if (upPressed) {
-            posX += speedX;
-            posZ += speedZ;
+            nextPosX += speedX;
+            nextPosZ += speedZ;
         } else {
-            posX -= speedX;
-            posZ -= speedZ;
+            nextPosX -= speedX;
+            nextPosZ -= speedZ;
+        }
+
+        int i = nextPosX + 10;
+        int j = nextPosZ + 10;
+        if(mapaElementos[i][j] == BLOCO){
+            posX = nextPosX;
+            posZ = nextPosZ;
+        }else{
+            printf("\nColisao: %d",mapaElementos[i][j]);
+            nextPosX = posX;
+            nextPosZ = posZ;
         }
 
 	} else {
@@ -622,7 +637,6 @@ void updateState() {
 	if (posY < heightLimit) {
 		posY = heightLimit;
 		speedY = 0.0f;
-		jumping = false;
 	} else {
 		speedY -= gravity;
 	}
@@ -710,13 +724,6 @@ Key press event handler
 void onKeyDown(unsigned char key, int x, int y) {
 	//printf("%d \n", key);
 	switch (key) {
-		case 32: //space
-			if (!spacePressed && !jumping) {
-				jumping = true;
-				speedY = jumpSpeed;
-			}
-			spacePressed = true;
-			break;
 		case 119: //w
 			if (!upPressed) {
 				alSourcePlay(source[0]);
@@ -741,6 +748,10 @@ void onKeyDown(unsigned char key, int x, int y) {
 		default:
 			break;
 	}
+
+	int i = posX+10;
+	int j = posZ+10;
+    printf("X: %f \t Z: %f \t\t I: %d \t J: %d \t Map: %d \n",posX,posZ,i,j,mapaElementos[i][j]);
 
 	//glutPostRedisplay();
 }
