@@ -52,6 +52,11 @@ seja uma spotlight;
 #define FALSE 0
 #define TRUE 1
 
+#define DIRECAO_NORTE 0
+#define DIRECAO_LESTE 1
+#define DIRECAO_SUL 2
+#define DIRECAO_OESTE 3
+
 // Constantes do mapa
 #define VAZIO 0
 #define BLOCO 1
@@ -157,6 +162,8 @@ float posZ = 2.0f;
 float nextPosX = 0.0f;
 float nextPosZ = 2.0f;
 
+int direcao = DIRECAO_NORTE;
+
 /*
 variavel auxiliar pra dar variação na altura do ponto de vista ao andar.
 */
@@ -240,7 +247,7 @@ bool C3DObject_Load_New(const char *pszFilename, GLMmodel **model){
     return false;
 
     glmUnitize(*model);
-    glmScale(*model,0.3); // USED TO SCALE THE OBJECT
+    glmScale(*model,0.5); // USED TO SCALE THE OBJECT
     glmFacetNormals(*model);
     glmVertexNormals(*model, 90.0);
 
@@ -265,14 +272,10 @@ Atualiza a posição e orientação da camera
 */
 void updateCam() {
 
-    gluLookAt(posX,posY+30,posZ,
+    gluLookAt(posX,posY+15,posZ,
 		posX + sin(roty*PI/180),posY + posYOffset + 0.025 * std::abs(sin(headPosAux*PI/180)) + cos(rotx*PI/180),posZ -cos(roty*PI/180),
 		0.0,1.0,0.0);
-	/*
-	gluLookAt(posX,posY + posYOffset + 0.025 * std::abs(sin(headPosAux*PI/180)),posZ,
-		posX + sin(roty*PI/180),posY + posYOffset + 0.025 * std::abs(sin(headPosAux*PI/180)) + cos(rotx*PI/180),posZ -cos(roty*PI/180),
-		0.0,1.0,0.0);
-    */
+
 
 	// atualiza a posição do listener e da origen do som, são as mesmas da camera, já que os passos vem de onde o personagem está
 	listenerPos[0] = posX;
@@ -350,7 +353,7 @@ void mainInit() {
 void initModel() {
 	printf("Loading models.. \n");
 
-	C3DObject_Load_New("ball.obj",&modelSphere);
+	C3DObject_Load_New("mk_kart.obj",&modelSphere);
 
     int i;
     for(i = 0 ; i <= quantidade_inimigos ; i++){
@@ -611,6 +614,7 @@ void renderScene() {
 
     glPushMatrix();
         glTranslatef(posX,1.0,posZ);
+        glRotatef((180 - (direcao*90)),0,1,0);
         glmDraw(modelSphere, GLM_SMOOTH | GLM_MATERIAL | GLM_TEXTURE);
 	glPopMatrix();
 
@@ -636,18 +640,39 @@ void updateState() {
 
     if (leftPressed) {
         leftPressed = false; // Simula um "delay" pois a rotacao estava muito rapida.
-		roty -= 90.0f;
+        if(direcao == DIRECAO_NORTE) direcao = DIRECAO_OESTE;
+        else direcao--;
 	}
 
 	if (rightPressed) {
         rightPressed = false; // Simula um "delay" pois a rotacao estava muito rapida.
-		roty += 90.0f;
+        if(direcao == DIRECAO_OESTE) direcao = DIRECAO_NORTE;
+        else direcao++;
 	}
+
+    //printf("Direcao: %d", direcao);
 
 	if (upPressed || downPressed) {
 
-        speedX = 0.25 * sin(roty*PI/180);
-        speedZ = -0.25 * cos(roty*PI/180);
+        if(direcao == DIRECAO_NORTE){
+            speedX = 0;
+            speedZ = -maxSpeed * cos(roty*PI/180);
+        }
+
+        if(direcao == DIRECAO_SUL){
+            speedX = 0;
+            speedZ = maxSpeed * cos(roty*PI/180);
+        }
+
+        if(direcao == DIRECAO_LESTE){
+            speedX = maxSpeed * cos(roty*PI/180);
+            speedZ = 0;
+        }
+
+        if(direcao == DIRECAO_OESTE){
+            speedX = -maxSpeed * cos(roty*PI/180);
+            speedZ = 0;
+        }
 
 		// efeito de "sobe e desce" ao andar
 		headPosAux += 8.5f;
