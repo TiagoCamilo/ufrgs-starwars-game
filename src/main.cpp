@@ -95,7 +95,6 @@ void mainInit();
 void initSound();
 void initTexture(char *textureName, int texturaValor);
 void initMap();
-void initInimigos();
 void debugMap();
 void initModel();
 void initLight();
@@ -116,6 +115,8 @@ void setViewport(GLint left, GLint right, GLint bottom, GLint top);
 void updateState();
 void renderFloor();
 void updateCam();
+
+void acaoCriarRachadura();
 
 /**
 Screen dimensions
@@ -331,8 +332,6 @@ void mainInit() {
 
     //debugMap();
 
-    initInimigos();
-
 	initModel();
 
 	initLight();
@@ -459,13 +458,18 @@ void initMap(void){
                         mapaElementos[j][k] = RACHADURA;
                     }
                     if( ptrSuperior[2] == COR_INIMIGO_R && ptrSuperior[1] == COR_INIMIGO_G && ptrSuperior[0] == COR_INIMIGO_B){
-                        mapaElementos[j][k] = INIMIGO;
+                        mapaElementos[j][k] = VAZIO; // Apenas precisamos das coordendas, não é necessario setar um elemento no mapa
+                        quantidade_inimigos++;
+                        inimigo[quantidade_inimigos] = (inimigo_t*)malloc(sizeof(inimigo_t));
+                        inimigo[quantidade_inimigos]->modelInimigo = NULL;
+                        inimigo[quantidade_inimigos]->x = j-10;
+                        inimigo[quantidade_inimigos]->z = k-10;
                     }
                     if( ptrSuperior[2] == COR_BURACO_R && ptrSuperior[1] == COR_BURACO_G && ptrSuperior[0] == COR_BURACO_B){
                         mapaElementos[j][k] = BURACO;
                     }
                     if( ptrSuperior[2] == COR_JOGADOR_R && ptrSuperior[1] == COR_JOGADOR_G && ptrSuperior[0] == COR_JOGADOR_B){
-                        mapaElementos[j][k] = JOGADOR;
+                        mapaElementos[j][k] = VAZIO; // Apenas precisamos das coordendas, não é necessario setar um elemento no mapa
                         nextPosX = posX = j - 10;
                         nextPosZ = posZ = k - 10;
                     }
@@ -485,21 +489,6 @@ void debugMap(){
         for(j = 0 ; j < 20 ; j++){
             if(mapaCenario[i][j] != VAZIO){
                 printf("%d \t %d \t\t %d \n",i,j,mapaCenario[i][j]);
-            }
-        }
-    }
-}
-
-void initInimigos(void){
-    int i,j;
-    for(i = 0 ; i < 20 ; i++){
-        for(j = 0 ; j < 20 ; j++){
-            if(mapaElementos[i][j] == INIMIGO){
-                quantidade_inimigos++;
-                inimigo[quantidade_inimigos] = (inimigo_t*)malloc(sizeof(inimigo_t));
-                inimigo[quantidade_inimigos]->modelInimigo = NULL;
-                inimigo[quantidade_inimigos]->x = i-10;
-                inimigo[quantidade_inimigos]->z = j-10;
             }
         }
     }
@@ -676,7 +665,7 @@ void updateState() {
 
         int i = nextPosX + 10;
         int j = nextPosZ + 10;
-        if(mapaCenario[i][j] == BLOCO){
+        if(mapaCenario[i][j] == BLOCO && mapaElementos[i][j] == VAZIO){
             posX = nextPosX;
             posZ = nextPosZ;
         }else{
@@ -785,6 +774,10 @@ Key press event handler
 void onKeyDown(unsigned char key, int x, int y) {
 	//printf("%d \n", key);
 	switch (key) {
+		case 32: //space
+			spacePressed = true;
+			acaoCriarRachadura();
+			break;
 		case 119: //w
         case 87: //W
 			if (!upPressed) {
@@ -862,6 +855,13 @@ void onKeyUp(unsigned char key, int x, int y) {
 	}
 
 	//glutPostRedisplay();
+}
+
+
+void acaoCriarRachadura(){
+	int i = posX+10;
+	int j = posZ+10;
+	mapaElementos[i+1][j] = BURACO;
 }
 
 void onWindowReshape(int x, int y) {
