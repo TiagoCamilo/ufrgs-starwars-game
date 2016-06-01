@@ -49,6 +49,8 @@ seja uma spotlight;
 #define SMOOTH_MATERIAL 1
 #define SMOOTH_MATERIAL_TEXTURE 2
 
+#define FALSE 0
+#define TRUE 1
 
 // Constantes do mapa
 #define VAZIO 0
@@ -86,6 +88,8 @@ seja uma spotlight;
 #define MAXIMO_TEXTURAS 5
 #define TEXTURA_GRAMA 1
 #define TEXTURA_AGUA 2
+#define TEXTURA_BURACO 3
+#define TEXTURA_RACHADURA 4
 
 void mainInit();
 void initSound();
@@ -318,8 +322,10 @@ void mainInit() {
 
     initSound();
 
-    initTexture("agua-textura.bmp", TEXTURA_AGUA);
-    initTexture("grama-textura.bmp", TEXTURA_GRAMA);
+    initTexture("textura-agua.bmp", TEXTURA_AGUA);
+    initTexture("textura-grama.bmp", TEXTURA_GRAMA);
+    initTexture("textura-buraco.bmp", TEXTURA_BURACO);
+    initTexture("textura-rachadura.bmp", TEXTURA_RACHADURA);
 
     initMap();
 
@@ -460,6 +466,8 @@ void initMap(void){
                     }
                     if( ptrSuperior[2] == COR_JOGADOR_R && ptrSuperior[1] == COR_JOGADOR_G && ptrSuperior[0] == COR_JOGADOR_B){
                         mapaElementos[j][k] = JOGADOR;
+                        nextPosX = posX = j - 10;
+                        nextPosZ = posZ = k - 10;
                     }
                     iSuperior--;
                     iInferior--;
@@ -482,8 +490,7 @@ void debugMap(){
     }
 }
 
-void initInimigos(void)
-{
+void initInimigos(void){
     int i,j;
     for(i = 0 ; i < 20 ; i++){
         for(j = 0 ; j < 20 ; j++){
@@ -552,8 +559,8 @@ void enableFog(void){
 
 }
 
-void renderFloor() {
-    glBindTexture(type, TEXTURA_GRAMA);
+void renderFloor(int tipoElemento, int texturaValor, int elementOverFloor) {
+    glBindTexture(type, texturaValor);
 
 	// set things up to render the floor with the texture
 	glShadeModel(GL_SMOOTH);
@@ -572,7 +579,11 @@ void renderFloor() {
     for (int i = 0; i < xQuads; i++) {
         for (int j = 0; j < zQuads; j++) {
 
-            if(mapaCenario[i][j] != BLOCO) continue;
+            if(elementOverFloor == TRUE){
+                if(mapaElementos[i][j] != tipoElemento) continue;
+            }else{
+                if(mapaCenario[i][j] != tipoElemento || mapaElementos[i][j] != VAZIO) continue;
+            }
 
             glBegin(GL_QUADS);
                 glTexCoord2f(1.0f, 0.0f);   // coords for the texture
@@ -596,56 +607,6 @@ void renderFloor() {
     }
 
 	glDisable(type);
-
-	glPopMatrix();
-}
-
-
-void renderWater() {
-    glBindTexture(type, TEXTURA_AGUA);
-
-	// set things up to render the floor with the texture
-	glShadeModel(GL_SMOOTH);
-	glEnable(type);
-    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-
-	glPushMatrix();
-
-    glTranslatef(-(float)planeSize/2.0f, 0.0f, -(float)planeSize/2.0f);
-
-	float textureScaleX = 10.0;
-	float textureScaleY = 10.0;
-    glColor4f(1.0f,1.0f,1.0f,1.0f);
-    int xQuads = 20;
-    int zQuads = 20;
-    for (int i = 0; i < xQuads; i++) {
-        for (int j = 0; j < zQuads; j++) {
-
-            if(mapaCenario[i][j] != VAZIO) continue;
-
-            glBegin(GL_QUADS);
-                glTexCoord2f(1.0f, 0.0f);   // coords for the texture
-                glNormal3f(0.0f,1.0f,0.0f);
-                glVertex3f(i * (float)planeSize/xQuads, 0.0f, (j+1) * (float)planeSize/zQuads);
-
-                glTexCoord2f(0.0f, 0.0f);  // coords for the texture
-                glNormal3f(0.0f,1.0f,0.0f);
-                glVertex3f((i+1) * (float)planeSize/xQuads, 0.0f, (j+1) * (float)planeSize/zQuads);
-
-                glTexCoord2f(0.0f, 1.0f);  // coords for the texture
-                glNormal3f(0.0f,1.0f,0.0f);
-                glVertex3f((i+1) * (float)planeSize/xQuads, 0.0f, j * (float)planeSize/zQuads);
-
-                glTexCoord2f(1.0f, 1.0f);  // coords for the texture
-                glNormal3f(0.0f,1.0f,0.0f);
-                glVertex3f(i * (float)planeSize/xQuads, 0.0f, j * (float)planeSize/zQuads);
-
-            glEnd();
-        }
-    }
-
-	glDisable(type);
-
 
 	glPopMatrix();
 }
@@ -674,8 +635,12 @@ void renderScene() {
 
     // binds the bmp file already loaded to the OpenGL parameters
 
-	renderFloor();
-	renderWater();
+	renderFloor(BLOCO, TEXTURA_GRAMA, FALSE);
+	renderFloor(VAZIO, TEXTURA_AGUA, FALSE);
+	renderFloor(INIMIGO, TEXTURA_GRAMA, TRUE);
+	renderFloor(JOGADOR, TEXTURA_GRAMA, TRUE);
+	renderFloor(BURACO, TEXTURA_BURACO, TRUE);
+    renderFloor(RACHADURA, TEXTURA_RACHADURA, TRUE);
 }
 
 void updateState() {
@@ -821,7 +786,7 @@ void onKeyDown(unsigned char key, int x, int y) {
 	//printf("%d \n", key);
 	switch (key) {
 		case 119: //w
-        case 87: //w
+        case 87: //W
 			if (!upPressed) {
 				alSourcePlay(source[0]);
 			}
@@ -865,18 +830,22 @@ void onKeyUp(unsigned char key, int x, int y) {
 			spacePressed = false;
 			break;
 		case 119: //w
+        case 87: //W
 			if (upPressed) {
 				alSourceStop(source[0]);
 			}
 			upPressed = false;
 			break;
 		case 115: //s
+        case 83: //S
 			downPressed = false;
 			break;
 		case 97: //a
+		case 65: //A
 			leftPressed = false;
 			break;
 		case 100: //d
+		case 68: //D
 			rightPressed = false;
 			break;
 		case 99: //c
