@@ -83,10 +83,13 @@ seja uma spotlight;
 #define COR_JOGADOR_B 255
 
 #define MAXIMO_INIMIGOS 10
+#define MAXIMO_TEXTURAS 5
+#define TEXTURA_GRAMA 1
+#define TEXTURA_AGUA 2
 
 void mainInit();
 void initSound();
-void initTexture(char *textureName);
+void initTexture(char *textureName, int texturaValor);
 void initMap();
 void initInimigos();
 void debugMap();
@@ -187,9 +190,9 @@ GLubyte     *ptr;            /* Pointer into bit buffer */
 GLubyte	    *rgba;           /* RGBA pixel buffer */
 GLubyte	    *rgbaptr;        /* Pointer into RGBA buffer */
 GLubyte     temp;            /* Swapping variable */
-GLenum      type,type2;            /* Texture type */
-GLuint      texture;         /* Texture object */
-
+GLenum      type;            /* Texture type */
+GLuint      texture[MAXIMO_TEXTURAS];         /* Texture object */
+int quantidade_texturas = -1;
 
 
 bool crouched = false;
@@ -315,11 +318,12 @@ void mainInit() {
 
     initSound();
 
-    initTexture("grama-textura.bmp");
+    initTexture("agua-textura.bmp", TEXTURA_AGUA);
+    initTexture("grama-textura.bmp", TEXTURA_GRAMA);
 
     initMap();
 
-    debugMap();
+    //debugMap();
 
     initInimigos();
 
@@ -497,7 +501,7 @@ void initInimigos(void)
 /**
 Initialize the texture using the library bitmap
 */
-void initTexture(char *textureName){
+void initTexture(char *textureName, int texturaValor){
     printf ("\nLoading texture..\n");
     // Load a texture object (256x256 true color)
     bits = LoadDIBitmap(textureName, &info);
@@ -512,8 +516,12 @@ void initTexture(char *textureName){
       type = GL_TEXTURE_2D;
 
     // Create and bind a texture object
-    glGenTextures(1, &texture);
-	glBindTexture(type, texture);
+    quantidade_texturas++;
+
+    glGenTextures(2, &texture[quantidade_texturas]);
+    texture[quantidade_texturas] = texturaValor;
+	glBindTexture(type, texture[quantidade_texturas]);
+
 
     // Create an RGBA image
     rgba = (GLubyte *)malloc(info->bmiHeader.biWidth * info->bmiHeader.biHeight * 4);
@@ -536,8 +544,7 @@ void initTexture(char *textureName){
     glTexImage2D(type, 0, 4, info->bmiHeader.biWidth, info->bmiHeader.biHeight,0, GL_RGBA, GL_UNSIGNED_BYTE, rgba );
 
 
-    printf("Textura %d\n", texture);
-	printf("Textures ok.\n\n", texture);
+    printf("Textura %d\n", texture[quantidade_texturas]);
 
 }
 
@@ -546,7 +553,7 @@ void enableFog(void){
 }
 
 void renderFloor() {
-    initTexture("grama-textura.bmp");
+    glBindTexture(type, TEXTURA_GRAMA);
 
 	// set things up to render the floor with the texture
 	glShadeModel(GL_SMOOTH);
@@ -590,13 +597,12 @@ void renderFloor() {
 
 	glDisable(type);
 
-
 	glPopMatrix();
 }
 
 
 void renderWater() {
-    initTexture("agua-textura.bmp");
+    glBindTexture(type, TEXTURA_AGUA);
 
 	// set things up to render the floor with the texture
 	glShadeModel(GL_SMOOTH);
@@ -667,7 +673,6 @@ void renderScene() {
     }
 
     // binds the bmp file already loaded to the OpenGL parameters
-    glBindTexture(type, texture);
 
 	renderFloor();
 	renderWater();
@@ -816,18 +821,22 @@ void onKeyDown(unsigned char key, int x, int y) {
 	//printf("%d \n", key);
 	switch (key) {
 		case 119: //w
+        case 87: //w
 			if (!upPressed) {
 				alSourcePlay(source[0]);
 			}
 			upPressed = true;
 			break;
 		case 115: //s
+        case 83: //S
 			downPressed = true;
 			break;
 		case 97: //a
+		case 65: //A
 			leftPressed = true;
 			break;
 		case 100: //d
+		case 68: //D
 			rightPressed = true;
 			break;
 		case 99: //c
