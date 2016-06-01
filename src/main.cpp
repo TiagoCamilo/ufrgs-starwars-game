@@ -52,6 +52,8 @@ seja uma spotlight;
 #define FALSE 0
 #define TRUE 1
 
+#define ESCALA 0.5
+
 #define DIRECAO_NORTE 0
 #define DIRECAO_LESTE 1
 #define DIRECAO_SUL 2
@@ -169,7 +171,7 @@ variavel auxiliar pra dar variação na altura do ponto de vista ao andar.
 */
 float headPosAux = 0.0f;
 
-float maxSpeed = 0.25f;
+float maxSpeed = 0.5f;
 
 float planeSize = 20.0f;
 
@@ -247,7 +249,7 @@ bool C3DObject_Load_New(const char *pszFilename, GLMmodel **model){
     return false;
 
     glmUnitize(*model);
-    glmScale(*model,0.5); // USED TO SCALE THE OBJECT
+    glmScale(*model,ESCALA); // USED TO SCALE THE OBJECT
     glmFacetNormals(*model);
     glmVertexNormals(*model, 90.0);
 
@@ -357,7 +359,7 @@ void initModel() {
 
     int i;
     for(i = 0 ; i <= quantidade_inimigos ; i++){
-        C3DObject_Load_New("qmark.obj",&inimigo[i]->modelInimigo);
+        C3DObject_Load_New("luigi.obj",&inimigo[i]->modelInimigo);
     }
 	printf("Models ok. \n \n \n");
 }
@@ -886,7 +888,10 @@ void onKeyUp(unsigned char key, int x, int y) {
 void acaoCriarRachadura(){
 	int i = posX+10;
 	int j = posZ+10;
-	mapaElementos[i+1][j] = BURACO;
+	if(direcao == DIRECAO_NORTE) mapaElementos[i][j-1] = BURACO;
+	if(direcao == DIRECAO_SUL) mapaElementos[i][j+1] = BURACO;
+	if(direcao == DIRECAO_LESTE) mapaElementos[i+1][j] = BURACO;
+	if(direcao == DIRECAO_OESTE) mapaElementos[i-1][j] = BURACO;
 }
 
 void onWindowReshape(int x, int y) {
