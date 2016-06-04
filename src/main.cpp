@@ -475,8 +475,8 @@ void initMap(void){
                     }
                     if( ptrSuperior[2] == COR_JOGADOR_R && ptrSuperior[1] == COR_JOGADOR_G && ptrSuperior[0] == COR_JOGADOR_B){
                         mapaElementos[j][k] = VAZIO; // Apenas precisamos das coordendas, não é necessario setar um elemento no mapa
-                        nextPosX = posX = j - 10;
-                        nextPosZ = posZ = k - 10;
+                        nextPosX = posX = (j - 10)+0.5;
+                        nextPosZ = posZ = (k - 10)+0.5;
                     }
                     iSuperior--;
                     iInferior--;
@@ -693,8 +693,8 @@ void updateState() {
         int i = nextPosX + 10;
         int j = nextPosZ + 10;
         if(mapaCenario[i][j] == BLOCO && mapaElementos[i][j] == VAZIO){
-            posX = nextPosX;
-            posZ = nextPosZ;
+            posX = floor(nextPosX)+0.5;
+            posZ = floor(nextPosZ)+0.5;
         }else{
             printf("\nColisao: %d",mapaCenario[i][j]);
             nextPosX = posX;
@@ -888,10 +888,12 @@ void onKeyUp(unsigned char key, int x, int y) {
 void acaoCriarRachadura(){
 	int i = posX+10;
 	int j = posZ+10;
-	if(direcao == DIRECAO_NORTE) mapaElementos[i][j-1] = BURACO;
-	if(direcao == DIRECAO_SUL) mapaElementos[i][j+1] = BURACO;
-	if(direcao == DIRECAO_LESTE) mapaElementos[i+1][j] = BURACO;
-	if(direcao == DIRECAO_OESTE) mapaElementos[i-1][j] = BURACO;
+	if(direcao == DIRECAO_NORTE) j--;
+	if(direcao == DIRECAO_SUL) j++;
+	if(direcao == DIRECAO_LESTE) i++;
+	if(direcao == DIRECAO_OESTE) i--;
+
+	if(mapaCenario[i][j] == BLOCO) mapaElementos[i][j] = BURACO;
 }
 
 void onWindowReshape(int x, int y) {
