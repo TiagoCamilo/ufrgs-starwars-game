@@ -123,7 +123,7 @@ void updateState();
 void renderFloor();
 void updateCam();
 
-void acaoCriarRachadura();
+int acaoCriarRachadura();
 void gerenciarColisao(int posicaoCenario, int posicaoElemento);
 void resetStage();
 
@@ -748,7 +748,7 @@ void updateState() {
 
         int j = nextPosX + 10;
         int k = nextPosZ + 10;
-        if(mapaCenario[j][k] == BLOCO && mapaElementos[j][k] == VAZIO){
+        if(mapaCenario[j][k] == BLOCO){
             posX = floor(nextPosX)+0.5;
             posZ = floor(nextPosZ)+0.5;
         }else{
@@ -942,17 +942,31 @@ void onKeyUp(unsigned char key, int x, int y) {
 }
 
 
-void acaoCriarRachadura(){
-	int i = posX+10;
-	int j = posZ+10;
-	if(direcao == DIRECAO_NORTE) j--;
-	if(direcao == DIRECAO_SUL) j++;
-	if(direcao == DIRECAO_LESTE) i++;
-	if(direcao == DIRECAO_OESTE) i--;
+int acaoCriarRachadura(){
+	int j = posX+10;
+	int k = posZ+10;
+	if(mapaElementos[j][k] != BURACO){
+        return FALSE;
+	}
 
-	if(mapaCenario[i][j] == BLOCO) mapaElementos[i][j] = BURACO;
+    int direcaoRachadura = direcao;
+    int rSpeedX, rSpeedZ;
+    rSpeedX = rSpeedZ = 0;
 
-	//resetStage();
+    if(direcaoRachadura == DIRECAO_NORTE) rSpeedZ--;
+    if(direcaoRachadura == DIRECAO_SUL) rSpeedZ++;
+    if(direcaoRachadura == DIRECAO_LESTE) rSpeedX++;
+    if(direcaoRachadura == DIRECAO_OESTE) rSpeedX--;
+
+    while (mapaCenario[j][k] == BLOCO){
+        j += rSpeedX;
+        k += rSpeedZ;
+        if(mapaCenario[j][k] == VAZIO || mapaElementos[j][k] == BURACO) {
+            break;
+        }
+        mapaElementos[j][k] = RACHADURA;
+    }
+
 }
 
 void gerenciarColisao(int posicaoCenario, int posicaoElemento){
