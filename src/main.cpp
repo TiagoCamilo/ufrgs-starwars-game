@@ -176,6 +176,7 @@ variavel auxiliar pra dar variação na altura do ponto de vista ao andar.
 float headPosAux = 0.0f;
 
 float maxSpeed = 0.5f;
+float maxInimigoSpeed = 0.5f;
 
 float planeSize = 20.0f;
 
@@ -231,6 +232,7 @@ int mapaCenario[20][20];
 typedef struct inimigo {
     float x;
     float z;
+    int direcao;
     GLMmodel *modelInimigo;
 } inimigo_t;
 
@@ -278,7 +280,7 @@ Atualiza a posição e orientação da camera
 */
 void updateCam() {
 
-    gluLookAt(posX,posY+15,posZ,
+    gluLookAt(posX,posY+20,posZ,
 		posX + sin(roty*PI/180),posY + posYOffset + 0.025 * std::abs(sin(headPosAux*PI/180)) + cos(rotx*PI/180),posZ -cos(roty*PI/180),
 		0.0,1.0,0.0);
 
@@ -359,11 +361,11 @@ void mainInit() {
 void initModel() {
 	printf("Loading models.. \n");
 
-	C3DObject_Load_New("mk_kart.obj",&modelSphere);
+	C3DObject_Load_New("luigi.obj",&modelSphere);
 
     int i;
     for(i = 0 ; i <= quantidade_inimigos ; i++){
-        C3DObject_Load_New("luigi.obj",&inimigo[i]->modelInimigo);
+        C3DObject_Load_New("mk_kart.obj",&inimigo[i]->modelInimigo);
     }
 	printf("Models ok. \n \n \n");
 }
@@ -473,6 +475,7 @@ void initMap(void){
                         inimigo[quantidade_inimigos]->modelInimigo = NULL;
                         inimigo[quantidade_inimigos]->x = (j - 10)+0.5;
                         inimigo[quantidade_inimigos]->z = (k - 10)+0.5;
+                        inimigo[quantidade_inimigos]->direcao = DIRECAO_SUL;
                         //printf("Inimigo: %d \t X: %d \t Z: %d \t J: %d \t K: %d \n",quantidade_inimigos,inimigo[quantidade_inimigos]->x,inimigo[quantidade_inimigos]->z,j,k);
                     }
                     if( ptrSuperior[2] == COR_BURACO_R && ptrSuperior[1] == COR_BURACO_G && ptrSuperior[0] == COR_BURACO_B){
@@ -629,7 +632,7 @@ void renderScene() {
     for(i = 0 ; i <= quantidade_inimigos ; i++){
         glPushMatrix();
             glTranslatef(inimigo[i]->x,1.0,inimigo[i]->z);
-            glRotatef((180 - (direcao*90)),0,1,0);
+            glRotatef((180 - (inimigo[i]->direcao*90)),0,1,0);
             glmDraw(inimigo[i]->modelInimigo, GLM_SMOOTH | GLM_MATERIAL | GLM_TEXTURE);
         glPopMatrix();
     }
@@ -645,15 +648,41 @@ void renderScene() {
 }
 
 void updateInimigoState(){
-    int i, j, k;
+    int i, j, k, novaDirecao;
+    float iSpeedX, iSpeedZ;
+
     for(i = 0 ; i <= quantidade_inimigos; i++){
+
+        iSpeedX = iSpeedZ = 0.0f;
+        novaDirecao = rand() % 4;
+
+
+        inimigo[i]->direcao = novaDirecao;
+        if(inimigo[i]->direcao == DIRECAO_NORTE) iSpeedZ = -maxInimigoSpeed;
+        if(inimigo[i]->direcao == DIRECAO_SUL) iSpeedZ = maxInimigoSpeed;
+        if(inimigo[i]->direcao == DIRECAO_OESTE) iSpeedX = -maxInimigoSpeed;
+        if(inimigo[i]->direcao == DIRECAO_LESTE) iSpeedX = maxInimigoSpeed;
+
+
+        // Verifica se a nova posicao calculada é valida
+        j = inimigo[i]->x + iSpeedX + 10;
+        k = inimigo[i]->z + iSpeedZ + 10;
+        if(mapaCenario[j][k] == VAZIO || mapaElementos[j][k] == BURACO || mapaElementos[j][k] == RACHADURA){
+            continue;
+        }
+
+
+        // Remove referencia do INIMIGO da posicao anterior
         j = inimigo[i]->x + 10;
         k = inimigo[i]->z + 10;
-        if(mapaElementos[j][k] == INIMIGO){ // Retira o INIMIGO da posicao anterior
+        if(mapaElementos[j][k] == INIMIGO){
             mapaElementos[j][k] = VAZIO;
         }
-        inimigo[i]->x += 0.01;
-        //inimigo[i]->z = 0.01;
+        //////
+
+
+        inimigo[i]->x += iSpeedX;
+        inimigo[i]->z += iSpeedZ;
 
         j = inimigo[i]->x + 10;
         k = inimigo[i]->z + 10;
