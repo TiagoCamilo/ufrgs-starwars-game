@@ -124,6 +124,8 @@ void renderFloor();
 void updateCam();
 
 void acaoCriarRachadura();
+void gerenciarColisao(int posicaoCenario, int posicaoElemento);
+void resetStage();
 
 /**
 Screen dimensions
@@ -163,6 +165,8 @@ float posY = 0.0f;
 float posZ = 2.0f;
 float nextPosX = 0.0f;
 float nextPosZ = 2.0f;
+float initialPosX = 0.0f;
+float initialPosZ = 2.0f;
 
 int direcao = DIRECAO_NORTE;
 
@@ -225,8 +229,8 @@ int mapaElementos[20][20];
 int mapaCenario[20][20];
 
 typedef struct inimigo {
-    int x;
-    int z;
+    float x;
+    float z;
     GLMmodel *modelInimigo;
 } inimigo_t;
 
@@ -463,20 +467,21 @@ void initMap(void){
                         mapaElementos[j][k] = RACHADURA;
                     }
                     if( ptrSuperior[2] == COR_INIMIGO_R && ptrSuperior[1] == COR_INIMIGO_G && ptrSuperior[0] == COR_INIMIGO_B){
-                        mapaElementos[j][k] = VAZIO; // Apenas precisamos das coordendas, não é necessario setar um elemento no mapa
+                        mapaElementos[j][k] = INIMIGO; // Apenas precisamos das coordendas, não é necessario setar um elemento no mapa
                         quantidade_inimigos++;
                         inimigo[quantidade_inimigos] = (inimigo_t*)malloc(sizeof(inimigo_t));
                         inimigo[quantidade_inimigos]->modelInimigo = NULL;
-                        inimigo[quantidade_inimigos]->x = j-10;
-                        inimigo[quantidade_inimigos]->z = k-10;
+                        inimigo[quantidade_inimigos]->x = (j - 10)+0.5;
+                        inimigo[quantidade_inimigos]->z = (k - 10)+0.5;
+                        //printf("Inimigo: %d \t X: %d \t Z: %d \t J: %d \t K: %d \n",quantidade_inimigos,inimigo[quantidade_inimigos]->x,inimigo[quantidade_inimigos]->z,j,k);
                     }
                     if( ptrSuperior[2] == COR_BURACO_R && ptrSuperior[1] == COR_BURACO_G && ptrSuperior[0] == COR_BURACO_B){
                         mapaElementos[j][k] = BURACO;
                     }
                     if( ptrSuperior[2] == COR_JOGADOR_R && ptrSuperior[1] == COR_JOGADOR_G && ptrSuperior[0] == COR_JOGADOR_B){
                         mapaElementos[j][k] = VAZIO; // Apenas precisamos das coordendas, não é necessario setar um elemento no mapa
-                        nextPosX = posX = (j - 10)+0.5;
-                        nextPosZ = posZ = (k - 10)+0.5;
+                        initialPosX = nextPosX = posX = (j - 10)+0.5;
+                        initialPosZ = nextPosZ = posZ = (k - 10)+0.5;
                     }
                     iSuperior--;
                     iInferior--;
@@ -624,6 +629,7 @@ void renderScene() {
     for(i = 0 ; i <= quantidade_inimigos ; i++){
         glPushMatrix();
             glTranslatef(inimigo[i]->x,1.0,inimigo[i]->z);
+            glRotatef((180 - (direcao*90)),0,1,0);
             glmDraw(inimigo[i]->modelInimigo, GLM_SMOOTH | GLM_MATERIAL | GLM_TEXTURE);
         glPopMatrix();
     }
@@ -636,6 +642,27 @@ void renderScene() {
 	renderFloor(JOGADOR, TEXTURA_GRAMA, TRUE);
 	renderFloor(BURACO, TEXTURA_BURACO, TRUE);
     renderFloor(RACHADURA, TEXTURA_RACHADURA, TRUE);
+}
+
+void updateInimigoState(){
+    int i, j, k;
+    for(i = 0 ; i <= quantidade_inimigos; i++){
+        j = inimigo[i]->x + 10;
+        k = inimigo[i]->z + 10;
+        if(mapaElementos[j][k] == INIMIGO){ // Retira o INIMIGO da posicao anterior
+            mapaElementos[j][k] = VAZIO;
+        }
+        inimigo[i]->x += 0.01;
+        //inimigo[i]->z = 0.01;
+
+        j = inimigo[i]->x + 10;
+        k = inimigo[i]->z + 10;
+        mapaElementos[j][k] = INIMIGO; // Posiciona o INIMIGO na nova posicao
+        if(j == (int)(posX+10) && k == (int)(posZ+10)){ // Se o INIMIGO atingiiu o JOGADOR
+            gerenciarColisao(mapaCenario[j][k],mapaElementos[j][k]);
+        }
+    }
+
 }
 
 void updateState() {
@@ -690,13 +717,13 @@ void updateState() {
             nextPosZ -= speedZ;
         }
 
-        int i = nextPosX + 10;
-        int j = nextPosZ + 10;
-        if(mapaCenario[i][j] == BLOCO && mapaElementos[i][j] == VAZIO){
+        int j = nextPosX + 10;
+        int k = nextPosZ + 10;
+        if(mapaCenario[j][k] == BLOCO && mapaElementos[j][k] == VAZIO){
             posX = floor(nextPosX)+0.5;
             posZ = floor(nextPosZ)+0.5;
         }else{
-            printf("\nColisao: %d",mapaCenario[i][j]);
+            gerenciarColisao(mapaCenario[j][k], mapaElementos[j][k]);
             nextPosX = posX;
             nextPosZ = posZ;
         }
@@ -725,6 +752,7 @@ Render scene
 */
 void mainRender() {
 	updateState();
+	updateInimigoState();
 	renderScene();
 	glFlush();
 	glutPostRedisplay();
@@ -834,9 +862,9 @@ void onKeyDown(unsigned char key, int x, int y) {
 			break;
 	}
 
-	int i = posX+10;
-	int j = posZ+10;
-    printf("X: %f \t Z: %f \t\t I: %d \t J: %d \t Map: %d \n",posX,posZ,i,j,mapaCenario[i][j]);
+	int j = posX+10;
+	int k = posZ+10;
+    printf("X: %f \t Z: %f \t\t J: %d \t K: %d \t Map: %d \n",posX,posZ,j,k,mapaCenario[j][k]);
 
 	//glutPostRedisplay();
 }
@@ -894,6 +922,22 @@ void acaoCriarRachadura(){
 	if(direcao == DIRECAO_OESTE) i--;
 
 	if(mapaCenario[i][j] == BLOCO) mapaElementos[i][j] = BURACO;
+
+	//resetStage();
+}
+
+void gerenciarColisao(int posicaoCenario, int posicaoElemento){
+    printf("Colisao \t\t Cenario: %d \t Elemento: %d \n",posicaoCenario, posicaoElemento);
+    if(posicaoCenario == VAZIO || posicaoElemento == INIMIGO){
+        resetStage();
+    }
+
+}
+
+void resetStage(){
+    nextPosX = posX = initialPosX;
+    nextPosZ = posZ = initialPosZ;
+    //mainInit();
 }
 
 void onWindowReshape(int x, int y) {
