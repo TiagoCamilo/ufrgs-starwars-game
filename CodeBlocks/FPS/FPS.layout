@@ -13,28 +13,24 @@
 	</File>
 	<File name="..\..\src\main.cpp" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="-1" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="20800" topLine="416" />
+			<Cursor1 position="25517" topLine="604" />
 		</Cursor>
 		<Folding>
-			<Collapse line="240" />
-			<Collapse line="262" />
-			<Collapse line="278" />
-			<Collapse line="299" />
-			<Collapse line="315" />
-			<Collapse line="358" />
-			<Collapse line="373" />
-			<Collapse line="434" />
-			<Collapse line="509" />
-			<Collapse line="560" />
-			<Collapse line="752" />
-			<Collapse line="764" />
-			<Collapse line="777" />
-			<Collapse line="786" />
-			<Collapse line="794" />
-			<Collapse line="805" />
-			<Collapse line="828" />
-			<Collapse line="874" />
-			<Collapse line="915" />
+			<Collapse line="301" />
+			<Collapse line="317" />
+			<Collapse line="436" />
+			<Collapse line="498" />
+			<Collapse line="512" />
+			<Collapse line="563" />
+			<Collapse line="615" />
+			<Collapse line="781" />
+			<Collapse line="793" />
+			<Collapse line="806" />
+			<Collapse line="815" />
+			<Collapse line="823" />
+			<Collapse line="834" />
+			<Collapse line="857" />
+			<Collapse line="903" />
 		</Folding>
 	</File>
 	<File name="..\..\src\Texture.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">

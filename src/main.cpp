@@ -67,6 +67,9 @@ seja uma spotlight;
 #define INIMIGO 4
 #define JOGADOR 5
 
+#define GRUPO1 1
+#define GRUPO2 2
+
 #define COR_VAZIO_R 255
 #define COR_VAZIO_G 255
 #define COR_VAZIO_B 255
@@ -126,6 +129,7 @@ void updateCam();
 int acaoCriarRachadura();
 void gerenciarColisao(int posicaoCenario, int posicaoElemento);
 void resetStage();
+int floodFill(int x , int y, int grupoAlvo, int grupoNovo );
 
 /**
 Screen dimensions
@@ -228,6 +232,7 @@ GLMmodel *modelSphere;
 
 int mapaElementos[20][20];
 int mapaCenario[20][20];
+int mapaGrupo[20][20];
 
 typedef struct inimigo {
     float x;
@@ -461,9 +466,11 @@ void initMap(void){
         for(k = 0 ; k < 20 ; k++){
                     mapaElementos[j][k] = VAZIO; // Valor padrao do elemento
                     mapaCenario[j][k] = VAZIO; // Valor padrao do cenario
+                    mapaGrupo[j][k] = VAZIO;
 
                     if( ptrInferior[2] == COR_BLOCO_R && ptrInferior[1] == COR_BLOCO_G && ptrInferior[0] == COR_BLOCO_B){
                         mapaCenario[j][k] = BLOCO;
+                        mapaGrupo[j][k] = GRUPO1;
                     }
                     if( ptrSuperior[2] == COR_RACHADURA_R && ptrSuperior[1] == COR_RACHADURA_G && ptrSuperior[0] == COR_RACHADURA_B){
                         mapaElementos[j][k] = RACHADURA;
@@ -497,14 +504,16 @@ void initMap(void){
 }
 
 void debugMap(){
-    int i,j;
-    for(i = 0 ; i < 20 ; i++){
-        for(j = 0 ; j < 20 ; j++){
-            if(mapaCenario[i][j] != VAZIO){
-                printf("%d \t %d \t\t %d \n",i,j,mapaCenario[i][j]);
+    int j,k;
+    for(j = 0 ; j < 20 ; j++){
+        for(k = 0 ; k < 20 ; k++){
+            if(mapaGrupo[j][k] != VAZIO){
+                printf("%d",mapaGrupo[j][k]);
             }
         }
+        printf("\n");
     }
+    printf("\n");
 }
 
 /**
@@ -943,9 +952,9 @@ void onKeyUp(unsigned char key, int x, int y) {
 
 
 int acaoCriarRachadura(){
-	int j = posX+10;
-	int k = posZ+10;
-	if(mapaElementos[j][k] != BURACO){
+	int jBuraco = posX+10;
+	int kBuraco = posZ+10;
+	if(mapaElementos[jBuraco][kBuraco] != BURACO){
         return FALSE;
 	}
 
@@ -958,6 +967,8 @@ int acaoCriarRachadura(){
     if(direcaoRachadura == DIRECAO_LESTE) rSpeedX++;
     if(direcaoRachadura == DIRECAO_OESTE) rSpeedX--;
 
+    int j = jBuraco;
+    int k = kBuraco;
     while (mapaCenario[j][k] == BLOCO){
         j += rSpeedX;
         k += rSpeedZ;
@@ -966,6 +977,14 @@ int acaoCriarRachadura(){
         }
         mapaElementos[j][k] = RACHADURA;
     }
+    if(mapaGrupo[jBuraco][kBuraco] == GRUPO1){
+        printf("\nCall 1\n");
+        floodFill(jBuraco, kBuraco, GRUPO1, GRUPO2);
+    }else{
+        printf("\nCall 2\n");
+        floodFill(jBuraco, kBuraco, GRUPO2, GRUPO1);
+    }
+    debugMap();
 
 }
 
@@ -982,6 +1001,28 @@ void resetStage(){
     nextPosZ = posZ = initialPosZ;
     //mainInit();
 }
+
+int floodFill(int x , int y, int grupoAlvo, int grupoNovo ){
+    if(grupoAlvo == grupoNovo) return 0;
+    if(mapaGrupo[x][y] != grupoAlvo) return 0;
+    mapaGrupo[x][y] = grupoNovo;
+    if(mapaCenario[x-1][y] == BLOCO && mapaElementos[x-1][y] != RACHADURA) floodFill(x-1, y,   grupoAlvo, grupoNovo);
+    if(mapaCenario[x+1][y] == BLOCO && mapaElementos[x+1][y] != RACHADURA) floodFill(x+1, y,   grupoAlvo, grupoNovo);
+    if(mapaCenario[x][y-1] == BLOCO && mapaElementos[x][y-1] != RACHADURA) floodFill(x,   y-1, grupoAlvo, grupoNovo);
+    if(mapaCenario[x][y+1] == BLOCO && mapaElementos[x][y+1] != RACHADURA) floodFill(x,   y+1, grupoAlvo, grupoNovo);
+    return 0;
+}
+/*
+Flood-fill (node, target-color, replacement-color):
+ 1. If target-color is equal to replacement-color, return.
+ 2. If the color of node is not equal to target-color, return.
+ 3. Set the color of node to replacement-color.
+ 4. Perform Flood-fill (one step to the south of node, target-color, replacement-color).
+    Perform Flood-fill (one step to the north of node, target-color, replacement-color).
+    Perform Flood-fill (one step to the west of node, target-color, replacement-color).
+    Perform Flood-fill (one step to the east of node, target-color, replacement-color).
+ 5. Return.
+*/
 
 void onWindowReshape(int x, int y) {
 	windowWidth = x;
