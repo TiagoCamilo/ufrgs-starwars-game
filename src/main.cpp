@@ -54,6 +54,9 @@ seja uma spotlight;
 
 #define ESCALA 0.5
 
+#define MORTO 0
+#define VIVO 1
+
 #define DIRECAO_NORTE 0
 #define DIRECAO_LESTE 1
 #define DIRECAO_SUL 2
@@ -130,6 +133,8 @@ int acaoCriarRachadura();
 void gerenciarColisao(int posicaoCenario, int posicaoElemento);
 void resetStage();
 int floodFill(int x , int y, int grupoAlvo, int grupoNovo );
+void gerenciarMapa();
+void desmoronarMapa(int grupo);
 
 /**
 Screen dimensions
@@ -236,8 +241,10 @@ int mapaGrupo[20][20];
 
 typedef struct inimigo {
     float x;
+    float y;
     float z;
     int direcao;
+    int estado;
     GLMmodel *modelInimigo;
 } inimigo_t;
 
@@ -474,6 +481,7 @@ void initMap(void){
                     }
                     if( ptrSuperior[2] == COR_RACHADURA_R && ptrSuperior[1] == COR_RACHADURA_G && ptrSuperior[0] == COR_RACHADURA_B){
                         mapaElementos[j][k] = RACHADURA;
+                        mapaGrupo[j][k] = VAZIO;
                     }
                     if( ptrSuperior[2] == COR_INIMIGO_R && ptrSuperior[1] == COR_INIMIGO_G && ptrSuperior[0] == COR_INIMIGO_B){
                         mapaElementos[j][k] = INIMIGO; // Apenas precisamos das coordendas, não é necessario setar um elemento no mapa
@@ -482,7 +490,9 @@ void initMap(void){
                         inimigo[quantidade_inimigos]->modelInimigo = NULL;
                         inimigo[quantidade_inimigos]->x = (j - 10)+0.5;
                         inimigo[quantidade_inimigos]->z = (k - 10)+0.5;
+                        inimigo[quantidade_inimigos]->y = 1.0;
                         inimigo[quantidade_inimigos]->direcao = DIRECAO_SUL;
+                        inimigo[quantidade_inimigos]->estado = VIVO;
                         //printf("Inimigo: %d \t X: %d \t Z: %d \t J: %d \t K: %d \n",quantidade_inimigos,inimigo[quantidade_inimigos]->x,inimigo[quantidade_inimigos]->z,j,k);
                     }
                     if( ptrSuperior[2] == COR_BURACO_R && ptrSuperior[1] == COR_BURACO_G && ptrSuperior[0] == COR_BURACO_B){
@@ -640,7 +650,7 @@ void renderScene() {
     int i;
     for(i = 0 ; i <= quantidade_inimigos ; i++){
         glPushMatrix();
-            glTranslatef(inimigo[i]->x,1.0,inimigo[i]->z);
+            glTranslatef(inimigo[i]->x,inimigo[i]->y,inimigo[i]->z);
             glRotatef((180 - (inimigo[i]->direcao*90)),0,1,0);
             glmDraw(inimigo[i]->modelInimigo, GLM_SMOOTH | GLM_MATERIAL | GLM_TEXTURE);
         glPopMatrix();
@@ -661,6 +671,21 @@ void updateInimigoState(){
     float iSpeedX, iSpeedZ;
 
     for(i = 0 ; i <= quantidade_inimigos; i++){
+        if(inimigo[i]->estado == MORTO){
+            if(inimigo[i]->y > -1){
+                inimigo[i]->y -= 0.05;
+            }
+            continue;
+        }
+
+        // Verifica se o inimigo foi morto
+        j = inimigo[i]->x + 10;
+        k = inimigo[i]->z + 10;
+        if(mapaCenario[j][k] == VAZIO){
+            inimigo[i]->estado = MORTO;
+            continue;
+        }
+
 
         iSpeedX = iSpeedZ = 0.0f;
         novaDirecao = rand() % 4;
@@ -976,6 +1001,8 @@ int acaoCriarRachadura(){
             break;
         }
         mapaElementos[j][k] = RACHADURA;
+        mapaGrupo[j][k] = VAZIO;
+
     }
     if(mapaGrupo[jBuraco][kBuraco] == GRUPO1){
         printf("\nCall 1\n");
@@ -984,8 +1011,48 @@ int acaoCriarRachadura(){
         printf("\nCall 2\n");
         floodFill(jBuraco, kBuraco, GRUPO2, GRUPO1);
     }
+
+    gerenciarMapa();
+
+}
+
+void gerenciarMapa(){
     debugMap();
 
+    int j,k, grupo1, grupo2;
+    grupo1 = grupo2 = 0;
+    for(j = 0 ; j < 20 ; j++){
+        for(k = 0 ; k < 20 ; k++){
+            if(mapaGrupo[j][k] == GRUPO1){
+                grupo1++;
+            }
+            if(mapaGrupo[j][k] == GRUPO2){
+                grupo2++;
+            }
+        }
+
+    }
+    printf("Grupo1: %d \t Grupo2: %d \n",grupo1,grupo2);
+    if(grupo1 > 0 && grupo2 > 0){
+        if(grupo1 < grupo2){
+            desmoronarMapa(GRUPO1);
+        }else{
+            desmoronarMapa(GRUPO2);
+        }
+    }
+}
+
+void desmoronarMapa(int grupo){
+    int j,k;
+    for(j = 0 ; j < 20 ; j++){
+        for(k = 0 ; k < 20 ; k++){
+            if(mapaGrupo[j][k] == grupo){
+                mapaCenario[j][k] = VAZIO;
+                mapaElementos[j][k] = VAZIO;
+            }
+        }
+
+    }
 }
 
 void gerenciarColisao(int posicaoCenario, int posicaoElemento){
@@ -1006,10 +1073,14 @@ int floodFill(int x , int y, int grupoAlvo, int grupoNovo ){
     if(grupoAlvo == grupoNovo) return 0;
     if(mapaGrupo[x][y] != grupoAlvo) return 0;
     mapaGrupo[x][y] = grupoNovo;
-    if(mapaCenario[x-1][y] == BLOCO && mapaElementos[x-1][y] != RACHADURA) floodFill(x-1, y,   grupoAlvo, grupoNovo);
-    if(mapaCenario[x+1][y] == BLOCO && mapaElementos[x+1][y] != RACHADURA) floodFill(x+1, y,   grupoAlvo, grupoNovo);
-    if(mapaCenario[x][y-1] == BLOCO && mapaElementos[x][y-1] != RACHADURA) floodFill(x,   y-1, grupoAlvo, grupoNovo);
-    if(mapaCenario[x][y+1] == BLOCO && mapaElementos[x][y+1] != RACHADURA) floodFill(x,   y+1, grupoAlvo, grupoNovo);
+    //if(mapaCenario[x-1][y] == BLOCO && mapaElementos[x-1][y] != RACHADURA) floodFill(x-1, y,   grupoAlvo, grupoNovo);
+    //if(mapaCenario[x+1][y] == BLOCO && mapaElementos[x+1][y] != RACHADURA) floodFill(x+1, y,   grupoAlvo, grupoNovo);
+    //if(mapaCenario[x][y-1] == BLOCO && mapaElementos[x][y-1] != RACHADURA) floodFill(x,   y-1, grupoAlvo, grupoNovo);
+    //if(mapaCenario[x][y+1] == BLOCO && mapaElementos[x][y+1] != RACHADURA) floodFill(x,   y+1, grupoAlvo, grupoNovo);
+    if(mapaGrupo[x-1][y] != VAZIO) floodFill(x-1, y,   grupoAlvo, grupoNovo);
+    if(mapaGrupo[x+1][y] != VAZIO) floodFill(x+1, y,   grupoAlvo, grupoNovo);
+    if(mapaGrupo[x][y-1] != VAZIO) floodFill(x,   y-1, grupoAlvo, grupoNovo);
+    if(mapaGrupo[x][y+1] != VAZIO) floodFill(x,   y+1, grupoAlvo, grupoNovo);
     return 0;
 }
 /*
