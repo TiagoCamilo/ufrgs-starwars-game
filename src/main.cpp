@@ -238,6 +238,8 @@ GLMmodel *modelSphere;
 int mapaElementos[20][20];
 int mapaCenario[20][20];
 int mapaGrupo[20][20];
+int jPrimeiroQuadrado = -1;
+int kPrimeiroQuadrado = -1;
 
 typedef struct inimigo {
     float x;
@@ -478,6 +480,10 @@ void initMap(void){
                     if( ptrInferior[2] == COR_BLOCO_R && ptrInferior[1] == COR_BLOCO_G && ptrInferior[0] == COR_BLOCO_B){
                         mapaCenario[j][k] = BLOCO;
                         mapaGrupo[j][k] = GRUPO1;
+                        if(jPrimeiroQuadrado == -1){ //Primeiro quadrado do mapa que possui bloco
+                            jPrimeiroQuadrado = j;
+                            kPrimeiroQuadrado = k;
+                        }
                     }
                     if( ptrSuperior[2] == COR_RACHADURA_R && ptrSuperior[1] == COR_RACHADURA_G && ptrSuperior[0] == COR_RACHADURA_B){
                         mapaElementos[j][k] = RACHADURA;
@@ -497,6 +503,7 @@ void initMap(void){
                     }
                     if( ptrSuperior[2] == COR_BURACO_R && ptrSuperior[1] == COR_BURACO_G && ptrSuperior[0] == COR_BURACO_B){
                         mapaElementos[j][k] = BURACO;
+                        mapaGrupo[j][k] = VAZIO;
                     }
                     if( ptrSuperior[2] == COR_JOGADOR_R && ptrSuperior[1] == COR_JOGADOR_G && ptrSuperior[0] == COR_JOGADOR_B){
                         mapaElementos[j][k] = VAZIO; // Apenas precisamos das coordendas, não é necessario setar um elemento no mapa
@@ -1004,39 +1011,53 @@ int acaoCriarRachadura(){
         mapaGrupo[j][k] = VAZIO;
 
     }
-    if(mapaGrupo[jBuraco][kBuraco] == GRUPO1){
-        printf("\nCall 1\n");
-        floodFill(jBuraco, kBuraco, GRUPO1, GRUPO2);
-    }else{
-        printf("\nCall 2\n");
-        floodFill(jBuraco, kBuraco, GRUPO2, GRUPO1);
-    }
 
     gerenciarMapa();
 
 }
 
 void gerenciarMapa(){
+
+    if(mapaGrupo[jPrimeiroQuadrado][kPrimeiroQuadrado] == GRUPO1){
+        floodFill(jPrimeiroQuadrado, kPrimeiroQuadrado, GRUPO1, GRUPO2);
+    }else{
+        floodFill(jPrimeiroQuadrado, kPrimeiroQuadrado, GRUPO2, GRUPO1);
+    }
+
     debugMap();
 
-    int j,k, grupo1, grupo2;
+    int j, k, jPrimeiroGrupo1, kPrimeiroGrupo1, jPrimeiroGrupo2, kPrimeiroGrupo2, grupo1, grupo2;
+    jPrimeiroGrupo1 = kPrimeiroGrupo1 = jPrimeiroGrupo2 = kPrimeiroGrupo2 = -1;
     grupo1 = grupo2 = 0;
     for(j = 0 ; j < 20 ; j++){
         for(k = 0 ; k < 20 ; k++){
             if(mapaGrupo[j][k] == GRUPO1){
                 grupo1++;
+                if(jPrimeiroGrupo1 == -1){
+                    jPrimeiroGrupo1 = j;
+                    kPrimeiroGrupo1 = k;
+                }
             }
             if(mapaGrupo[j][k] == GRUPO2){
                 grupo2++;
+                if(jPrimeiroGrupo2 == -1){
+                    jPrimeiroGrupo2 = j;
+                    kPrimeiroGrupo2 = k;
+                }
             }
         }
-
     }
-    printf("Grupo1: %d \t Grupo2: %d \n",grupo1,grupo2);
+
+    //printf("Grupo1: %d \t Grupo2: %d \t Total: %d \n",grupo1,grupo2, grupo1+grupo2);
+
     if(grupo1 > 0 && grupo2 > 0){
         if(grupo1 < grupo2){
+            jPrimeiroQuadrado = jPrimeiroGrupo2;
+            kPrimeiroQuadrado = kPrimeiroGrupo2;
             desmoronarMapa(GRUPO1);
         }else{
+            jPrimeiroQuadrado = jPrimeiroGrupo1;
+            kPrimeiroQuadrado = kPrimeiroGrupo1;
             desmoronarMapa(GRUPO2);
         }
     }
@@ -1049,6 +1070,7 @@ void desmoronarMapa(int grupo){
             if(mapaGrupo[j][k] == grupo){
                 mapaCenario[j][k] = VAZIO;
                 mapaElementos[j][k] = VAZIO;
+                mapaGrupo[j][k] = VAZIO;
             }
         }
 
