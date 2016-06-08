@@ -1075,6 +1075,24 @@ void desmoronarMapa(int grupo){
         }
 
     }
+
+    for(j = 0 ; j < 20 ; j++){
+        for(k = 0 ; k < 20 ; k++){
+            if(mapaElementos[j][k] == RACHADURA || mapaElementos[j][k] == BURACO){
+                if(mapaCenario[j - 1][k] == VAZIO && mapaCenario[j + 1][k] == VAZIO){
+                    mapaCenario[j][k] = VAZIO;
+                    mapaElementos[j][k] = VAZIO;
+                    mapaGrupo[j][k] = VAZIO;
+                }
+                if(mapaCenario[j][k - 1] == VAZIO && mapaCenario[j][k + 1] == VAZIO){
+                    mapaCenario[j][k] = VAZIO;
+                    mapaElementos[j][k] = VAZIO;
+                    mapaGrupo[j][k] = VAZIO;
+                }
+            }
+        }
+    }
+
 }
 
 void gerenciarColisao(int posicaoCenario, int posicaoElemento){
