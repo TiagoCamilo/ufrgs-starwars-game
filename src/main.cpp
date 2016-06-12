@@ -63,6 +63,7 @@ seja uma spotlight;
 #define DIRECAO_OESTE 3
 
 #define MIN_MOVIMENTOS_DIRECAO 5
+#define MIN_DISTANCIA_PERSEGUICAO 10
 
 // Constantes do mapa
 #define VAZIO 0
@@ -141,6 +142,7 @@ void resetStage();
 int floodFill(int x , int y, int grupoAlvo, int grupoNovo );
 void gerenciarMapa();
 void desmoronarMapa(int grupo);
+int perseguirJogador(int inimigoIndice);
 
 /**
 Screen dimensions
@@ -193,7 +195,7 @@ variavel auxiliar pra dar variação na altura do ponto de vista ao andar.
 float headPosAux = 0.0f;
 
 float maxSpeed = 0.25f;
-float maxInimigoSpeed = 0.25f;
+float maxInimigoSpeed = 0.05f;
 
 float planeSize = 20.0f;
 
@@ -309,7 +311,7 @@ void updateCam() {
             0.0,1.0,0.0);
     }
     if(modoJogo == JOGO_2D){
-        gluLookAt(posX,posY+25,posZ,
+        gluLookAt(posX,posY+15,posZ,
             posX + sin(roty*PI/180),posY+ 0.025 * std::abs(sin(headPosAux*PI/180)) + cos(rotx*PI/180),posZ -cos(roty*PI/180),
             0.0,1.0,0.0);
     }
@@ -715,18 +717,21 @@ void updateInimigoState(){
             continue;
         }
 
-        inimigo[i]->qntTurnoDirecao--;
-        if(inimigo[i]->qntTurnoDirecao > 0){
-            novaDirecao = inimigo[i]->direcao;
+
+        if(abs(j - (int)(posX+10)) < MIN_DISTANCIA_PERSEGUICAO && abs(k - (int)(posZ+10)) < MIN_DISTANCIA_PERSEGUICAO){
+            novaDirecao = perseguirJogador(i);
         }else{
-            novaDirecao = rand() % 4;
-            inimigo[i]->qntTurnoDirecao = MIN_MOVIMENTOS_DIRECAO + rand() % 10;
+            inimigo[i]->qntTurnoDirecao--;
+            if(inimigo[i]->qntTurnoDirecao > 0){
+                novaDirecao = inimigo[i]->direcao;
+            }else{
+                novaDirecao = rand() % 4;
+                inimigo[i]->qntTurnoDirecao = MIN_MOVIMENTOS_DIRECAO + rand() % 10;
+            }
         }
 
 
         iSpeedX = iSpeedZ = 0.0f;
-
-
 
         inimigo[i]->direcao = novaDirecao;
         if(inimigo[i]->direcao == DIRECAO_NORTE) iSpeedZ = -maxInimigoSpeed;
@@ -764,6 +769,50 @@ void updateInimigoState(){
     }
 
 }
+
+double distanciaPontos(float x1, float z1, float x2, float z2){
+    double d;
+    d = sqrt(pow((x2 - x1),2)+pow((z2 - z1),2));
+    return d;
+}
+
+int perseguirJogador (int inimigoIndice){
+    int melhorDirecao, novaDirecao, j, k;
+    float melhorDistancia, novaDistancia, novoX, novoZ, iSpeedX, iSpeedZ;
+
+    melhorDistancia = distanciaPontos(inimigo[inimigoIndice]->x,inimigo[inimigoIndice]->z,posX,posZ);
+    melhorDirecao = inimigo[inimigoIndice]->direcao;
+
+    for(novaDirecao = 0; novaDirecao < 4; novaDirecao++){
+        iSpeedX = iSpeedZ = 0.0f;
+
+        if(novaDirecao == DIRECAO_NORTE) iSpeedZ = -maxInimigoSpeed;
+        if(novaDirecao == DIRECAO_SUL) iSpeedZ = maxInimigoSpeed;
+        if(novaDirecao == DIRECAO_OESTE) iSpeedX = -maxInimigoSpeed;
+        if(novaDirecao == DIRECAO_LESTE) iSpeedX = maxInimigoSpeed;
+
+
+        // Verifica se a nova posicao calculada é valida
+        j = inimigo[inimigoIndice]->x + iSpeedX + 10;
+        k = inimigo[inimigoIndice]->z + iSpeedZ + 10;
+        if(mapaCenario[j][k] == VAZIO || mapaElementos[j][k] == BURACO || mapaElementos[j][k] == RACHADURA){
+            continue;
+        }
+
+        novoX = inimigo[inimigoIndice]->x + iSpeedX;
+        novoZ = inimigo[inimigoIndice]->z + iSpeedZ;
+        //printf("Direcao %d: \t %f \t %f \t %f \n",novaDirecao,novoX, novoZ, distanciaPontos(novoX,novoZ,posX,posZ));
+        novaDistancia = distanciaPontos(novoX,novoZ,posX,posZ);
+        if(novaDistancia < melhorDistancia){
+            melhorDistancia = novaDistancia;
+            melhorDirecao = novaDirecao;
+        }
+    }
+
+    return melhorDirecao;
+}
+
+
 
 void updateState() {
 
