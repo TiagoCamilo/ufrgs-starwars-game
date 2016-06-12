@@ -62,6 +62,8 @@ seja uma spotlight;
 #define DIRECAO_SUL 2
 #define DIRECAO_OESTE 3
 
+#define MIN_MOVIMENTOS_DIRECAO 5
+
 // Constantes do mapa
 #define VAZIO 0
 #define BLOCO 1
@@ -253,6 +255,7 @@ typedef struct inimigo {
     float z;
     int direcao;
     int estado;
+    int qntTurnoDirecao;
     GLMmodel *modelInimigo;
 } inimigo_t;
 
@@ -306,7 +309,7 @@ void updateCam() {
             0.0,1.0,0.0);
     }
     if(modoJogo == JOGO_2D){
-        gluLookAt(posX,posY+15,posZ,
+        gluLookAt(posX,posY+25,posZ,
             posX + sin(roty*PI/180),posY+ 0.025 * std::abs(sin(headPosAux*PI/180)) + cos(rotx*PI/180),posZ -cos(roty*PI/180),
             0.0,1.0,0.0);
     }
@@ -517,6 +520,7 @@ void initMap(void){
                         inimigo[quantidade_inimigos]->y = 1.0;
                         inimigo[quantidade_inimigos]->direcao = DIRECAO_SUL;
                         inimigo[quantidade_inimigos]->estado = VIVO;
+                        inimigo[quantidade_inimigos]->qntTurnoDirecao = MIN_MOVIMENTOS_DIRECAO;
                         //printf("Inimigo: %d \t X: %d \t Z: %d \t J: %d \t K: %d \n",quantidade_inimigos,inimigo[quantidade_inimigos]->x,inimigo[quantidade_inimigos]->z,j,k);
                     }
                     if( ptrSuperior[2] == COR_BURACO_R && ptrSuperior[1] == COR_BURACO_G && ptrSuperior[0] == COR_BURACO_B){
@@ -711,9 +715,17 @@ void updateInimigoState(){
             continue;
         }
 
+        inimigo[i]->qntTurnoDirecao--;
+        if(inimigo[i]->qntTurnoDirecao > 0){
+            novaDirecao = inimigo[i]->direcao;
+        }else{
+            novaDirecao = rand() % 4;
+            inimigo[i]->qntTurnoDirecao = MIN_MOVIMENTOS_DIRECAO + rand() % 10;
+        }
+
 
         iSpeedX = iSpeedZ = 0.0f;
-        novaDirecao = rand() % 4;
+
 
 
         inimigo[i]->direcao = novaDirecao;
