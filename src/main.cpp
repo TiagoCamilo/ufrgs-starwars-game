@@ -104,6 +104,10 @@ seja uma spotlight;
 #define TEXTURA_BURACO 3
 #define TEXTURA_RACHADURA 4
 
+#define JOGO_1P 1
+#define JOGO_2D 2
+#define JOGO_3P 3
+
 void mainInit();
 void initSound();
 void initTexture(char *textureName, int texturaValor);
@@ -179,13 +183,15 @@ float initialPosZ = 2.0f;
 
 int direcao = DIRECAO_NORTE;
 
+int modoJogo = JOGO_2D;
+
 /*
 variavel auxiliar pra dar variação na altura do ponto de vista ao andar.
 */
 float headPosAux = 0.0f;
 
-float maxSpeed = 0.5f;
-float maxInimigoSpeed = 0.5f;
+float maxSpeed = 0.25f;
+float maxInimigoSpeed = 0.25f;
 
 float planeSize = 20.0f;
 
@@ -294,9 +300,21 @@ Atualiza a posição e orientação da camera
 */
 void updateCam() {
 
-    gluLookAt(posX,posY+20,posZ,
-		posX + sin(roty*PI/180),posY + posYOffset + 0.025 * std::abs(sin(headPosAux*PI/180)) + cos(rotx*PI/180),posZ -cos(roty*PI/180),
-		0.0,1.0,0.0);
+    if(modoJogo == JOGO_1P){
+        gluLookAt(posX,posY+2,posZ+1,
+            posX + sin(roty*PI/180),posY+1+ 0.025 * std::abs(sin(headPosAux*PI/180)) + cos(rotx*PI/180),posZ -cos(roty*PI/180),
+            0.0,1.0,0.0);
+    }
+    if(modoJogo == JOGO_2D){
+        gluLookAt(posX,posY+15,posZ,
+            posX + sin(roty*PI/180),posY+ 0.025 * std::abs(sin(headPosAux*PI/180)) + cos(rotx*PI/180),posZ -cos(roty*PI/180),
+            0.0,1.0,0.0);
+    }
+    if(modoJogo == JOGO_3P){
+        gluLookAt(posX,posY+10,posZ+7,
+            posX + sin(roty*PI/180),posY+ 0.025 * std::abs(sin(headPosAux*PI/180)) + cos(rotx*PI/180),posZ -cos(roty*PI/180),
+            0.0,1.0,0.0);
+    }
 
 
 	// atualiza a posição do listener e da origen do som, são as mesmas da camera, já que os passos vem de onde o personagem está
@@ -790,8 +808,10 @@ void updateState() {
         int j = nextPosX + 10;
         int k = nextPosZ + 10;
         if(mapaCenario[j][k] == BLOCO){
-            posX = floor(nextPosX)+0.5;
-            posZ = floor(nextPosZ)+0.5;
+            //posX = floor(nextPosX)+0.5;
+            posX = nextPosX;
+            //posZ = floor(nextPosZ)+0.5;
+            posZ = nextPosZ;
         }else{
             gerenciarColisao(mapaCenario[j][k], mapaElementos[j][k]);
             nextPosX = posX;
@@ -928,15 +948,27 @@ void onKeyDown(unsigned char key, int x, int y) {
 		case 114: //r
 			running = true;
 			break;
+		case 118: //v
+        case 86: //V
+            switch(modoJogo){
+                case JOGO_1P:
+                    modoJogo = JOGO_2D;
+                    break;
+                case JOGO_2D:
+                    modoJogo = JOGO_3P;
+                    break;
+                case JOGO_3P:
+                    modoJogo = JOGO_1P;
+                    break;
+            }
+
 		default:
 			break;
 	}
 
 	int j = posX+10;
 	int k = posZ+10;
-    printf("X: %f \t Z: %f \t\t J: %d \t K: %d \t Map: %d \n",posX,posZ,j,k,mapaCenario[j][k]);
 
-	//glutPostRedisplay();
 }
 
 /**
@@ -1048,8 +1080,6 @@ void gerenciarMapa(){
         }
     }
 
-    //printf("Grupo1: %d \t Grupo2: %d \t Total: %d \n",grupo1,grupo2, grupo1+grupo2);
-
     if(grupo1 > 0 && grupo2 > 0){
         if(grupo1 < grupo2){
             jPrimeiroQuadrado = jPrimeiroGrupo2;
@@ -1096,7 +1126,7 @@ void desmoronarMapa(int grupo){
 }
 
 void gerenciarColisao(int posicaoCenario, int posicaoElemento){
-    printf("Colisao \t\t Cenario: %d \t Elemento: %d \n",posicaoCenario, posicaoElemento);
+    //printf("Colisao \t\t Cenario: %d \t Elemento: %d \n",posicaoCenario, posicaoElemento);
     if(posicaoCenario == VAZIO || posicaoElemento == INIMIGO){
         resetStage();
     }
@@ -1106,34 +1136,19 @@ void gerenciarColisao(int posicaoCenario, int posicaoElemento){
 void resetStage(){
     nextPosX = posX = initialPosX;
     nextPosZ = posZ = initialPosZ;
-    //mainInit();
 }
 
 int floodFill(int x , int y, int grupoAlvo, int grupoNovo ){
     if(grupoAlvo == grupoNovo) return 0;
     if(mapaGrupo[x][y] != grupoAlvo) return 0;
     mapaGrupo[x][y] = grupoNovo;
-    //if(mapaCenario[x-1][y] == BLOCO && mapaElementos[x-1][y] != RACHADURA) floodFill(x-1, y,   grupoAlvo, grupoNovo);
-    //if(mapaCenario[x+1][y] == BLOCO && mapaElementos[x+1][y] != RACHADURA) floodFill(x+1, y,   grupoAlvo, grupoNovo);
-    //if(mapaCenario[x][y-1] == BLOCO && mapaElementos[x][y-1] != RACHADURA) floodFill(x,   y-1, grupoAlvo, grupoNovo);
-    //if(mapaCenario[x][y+1] == BLOCO && mapaElementos[x][y+1] != RACHADURA) floodFill(x,   y+1, grupoAlvo, grupoNovo);
     if(mapaGrupo[x-1][y] != VAZIO) floodFill(x-1, y,   grupoAlvo, grupoNovo);
     if(mapaGrupo[x+1][y] != VAZIO) floodFill(x+1, y,   grupoAlvo, grupoNovo);
     if(mapaGrupo[x][y-1] != VAZIO) floodFill(x,   y-1, grupoAlvo, grupoNovo);
     if(mapaGrupo[x][y+1] != VAZIO) floodFill(x,   y+1, grupoAlvo, grupoNovo);
     return 0;
 }
-/*
-Flood-fill (node, target-color, replacement-color):
- 1. If target-color is equal to replacement-color, return.
- 2. If the color of node is not equal to target-color, return.
- 3. Set the color of node to replacement-color.
- 4. Perform Flood-fill (one step to the south of node, target-color, replacement-color).
-    Perform Flood-fill (one step to the north of node, target-color, replacement-color).
-    Perform Flood-fill (one step to the west of node, target-color, replacement-color).
-    Perform Flood-fill (one step to the east of node, target-color, replacement-color).
- 5. Return.
-*/
+
 
 void onWindowReshape(int x, int y) {
 	windowWidth = x;
