@@ -63,7 +63,7 @@ seja uma spotlight;
 #define DIRECAO_OESTE 3
 
 #define MIN_MOVIMENTOS_DIRECAO 5
-#define MIN_DISTANCIA_PERSEGUICAO 10
+#define MIN_DISTANCIA_PERSEGUICAO 0
 
 // Constantes do mapa
 #define VAZIO 0
@@ -371,8 +371,8 @@ void mainInit() {
 
     initSound();
 
-    initTexture("textura-agua.bmp", TEXTURA_AGUA);
-    initTexture("textura-grama.bmp", TEXTURA_GRAMA);
+    initTexture("textura-espaco.bmp", TEXTURA_AGUA);
+    initTexture("textura-nave.bmp", TEXTURA_GRAMA);
     initTexture("textura-buraco.bmp", TEXTURA_BURACO);
     initTexture("textura-rachadura.bmp", TEXTURA_RACHADURA);
 
@@ -829,12 +829,22 @@ void updateState() {
 
     if (leftPressed) {
         leftPressed = false; // Simula um "delay" pois a rotacao estava muito rapida.
+
+        if(modoJogo == JOGO_1P || modoJogo == JOGO_3P) {
+            roty -= 90.0f;
+        }
+
         if(direcao == DIRECAO_NORTE) direcao = DIRECAO_OESTE;
         else direcao--;
 	}
 
 	if (rightPressed) {
         rightPressed = false; // Simula um "delay" pois a rotacao estava muito rapida.
+
+        if(modoJogo == JOGO_1P || modoJogo == JOGO_3P) {
+            roty += 90.0f;
+        }
+
         if(direcao == DIRECAO_OESTE) direcao = DIRECAO_NORTE;
         else direcao++;
 	}
@@ -843,25 +853,32 @@ void updateState() {
 
 	if (upPressed || downPressed) {
 
-        if(direcao == DIRECAO_NORTE){
-            speedX = 0;
+        /*if(modoJogo == JOGO_1P || modoJogo == JOGO_3P) {
+            speedX = maxSpeed * sin(roty*PI/180);
             speedZ = -maxSpeed * cos(roty*PI/180);
-        }
+        }else{ //Se JOGO_2D*/
 
-        if(direcao == DIRECAO_SUL){
-            speedX = 0;
-            speedZ = maxSpeed * cos(roty*PI/180);
-        }
+            if(direcao == DIRECAO_NORTE){
+                speedX = 0;
+                speedZ = -maxSpeed * cos(roty*PI/180);
+            }
 
-        if(direcao == DIRECAO_LESTE){
-            speedX = maxSpeed * cos(roty*PI/180);
-            speedZ = 0;
-        }
+            if(direcao == DIRECAO_SUL){
+                speedX = 0;
+                speedZ = maxSpeed * cos(roty*PI/180);
+            }
 
-        if(direcao == DIRECAO_OESTE){
-            speedX = -maxSpeed * cos(roty*PI/180);
-            speedZ = 0;
-        }
+            if(direcao == DIRECAO_LESTE){
+                speedX = maxSpeed * cos(roty*PI/180);
+                speedZ = 0;
+            }
+
+            if(direcao == DIRECAO_OESTE){
+                speedX = -maxSpeed * cos(roty*PI/180);
+                speedZ = 0;
+            }
+
+        //}
 
 		// efeito de "sobe e desce" ao andar
 		headPosAux += 8.5f;
