@@ -698,10 +698,11 @@ void renderScene() {
 }
 
 void updateInimigoState(){
-    int i, j, k, novaDirecao;
+    int i, j, k, l, novaDirecao, movimentoInvalido = FALSE;
     float iSpeedX, iSpeedZ;
 
     for(i = 0 ; i <= quantidade_inimigos; i++){
+        movimentoInvalido = FALSE;
         if(inimigo[i]->estado == MORTO){
             if(inimigo[i]->y > -1){
                 inimigo[i]->y -= 0.05;
@@ -744,6 +745,16 @@ void updateInimigoState(){
         j = inimigo[i]->x + iSpeedX + 10;
         k = inimigo[i]->z + iSpeedZ + 10;
         if(mapaCenario[j][k] == VAZIO || mapaElementos[j][k] == BURACO || mapaElementos[j][k] == RACHADURA){
+            continue;
+        }
+        for(l = 0 ; l <= quantidade_inimigos; l++){
+            //printf("I: %d \t %d \t %d \t L: %d \t %d \t %d \n",i,(int)inimigo[i]->x,(int)inimigo[i]->z,l,(int)inimigo[l]->x,(int)inimigo[l]->z);
+            if( i != l && (int)(inimigo[i]->x + iSpeedX) == (int)inimigo[l]->x && (int)(inimigo[i]->z + iSpeedZ) == (int)inimigo[l]->z ){
+                movimentoInvalido = TRUE;
+            }
+        }
+        if(movimentoInvalido == TRUE){
+            printf("Invalido\n");
             continue;
         }
 
