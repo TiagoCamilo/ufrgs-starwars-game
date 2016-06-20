@@ -63,7 +63,7 @@ seja uma spotlight;
 #define DIRECAO_OESTE 3
 
 #define MIN_MOVIMENTOS_DIRECAO 5
-#define MIN_DISTANCIA_PERSEGUICAO 0
+#define MIN_DISTANCIA_PERSEGUICAO 4
 
 // Constantes do mapa
 #define VAZIO 0
@@ -373,8 +373,8 @@ void mainInit() {
 
     initTexture("textura-espaco.bmp", TEXTURA_AGUA);
     initTexture("textura-nave.bmp", TEXTURA_GRAMA);
-    initTexture("textura-buraco.bmp", TEXTURA_BURACO);
-    initTexture("textura-rachadura.bmp", TEXTURA_RACHADURA);
+    initTexture("textura-buraco-nave.bmp", TEXTURA_BURACO);
+    initTexture("textura-rachadura-nave.bmp", TEXTURA_RACHADURA);
 
     initMap();
 
@@ -704,8 +704,8 @@ void updateInimigoState(){
     for(i = 0 ; i <= quantidade_inimigos; i++){
         movimentoInvalido = FALSE;
         if(inimigo[i]->estado == MORTO){
-            if(inimigo[i]->y > -1){
-                inimigo[i]->y -= 0.05;
+            if(inimigo[i]->y < 20){
+                inimigo[i]->y += 0.5;
             }
             continue;
         }

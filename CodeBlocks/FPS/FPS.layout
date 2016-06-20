@@ -13,13 +13,8 @@
 	</File>
 	<File name="..\..\src\main.cpp" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1908" topLine="81" />
+			<Cursor1 position="25397" topLine="717" />
 		</Cursor>
-		<Folding>
-			<Collapse line="354" />
-			<Collapse line="362" />
-			<Collapse line="397" />
-		</Folding>
 	</File>
 	<File name="..\..\src\Texture.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
