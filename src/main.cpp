@@ -49,6 +49,7 @@ seja uma spotlight;
 #define SMOOTH_MATERIAL 1
 #define SMOOTH_MATERIAL_TEXTURE 2
 
+#define ZERO 0
 #define FALSE 0
 #define TRUE 1
 
@@ -64,13 +65,15 @@ seja uma spotlight;
 
 #define MIN_MOVIMENTOS_DIRECAO 5
 #define MIN_DISTANCIA_PERSEGUICAO 4
+#define TURNOS_IMUNIDADE 100
+#define EMPURRAR_DISTANCIA 2
 
 // Constantes do mapa
 #define VAZIO 0
 #define BLOCO 1
 #define RACHADURA 2
 #define BURACO 3
-#define INIMIGO 4
+#define INIMIGO 40
 #define JOGADOR 5
 
 #define GRUPO1 1
@@ -136,6 +139,7 @@ void updateState();
 void renderFloor();
 void updateCam();
 
+void acaoEmpurrar();
 int acaoCriarRachadura();
 void gerenciarColisao(int posicaoCenario, int posicaoElemento);
 void resetStage();
@@ -250,6 +254,7 @@ int mapaCenario[20][20];
 int mapaGrupo[20][20];
 int jPrimeiroQuadrado = -1;
 int kPrimeiroQuadrado = -1;
+int turnosImunidade = TURNOS_IMUNIDADE;
 
 typedef struct inimigo {
     float x;
@@ -258,6 +263,7 @@ typedef struct inimigo {
     int direcao;
     int estado;
     int qntTurnoDirecao;
+    int empurrado;
     GLMmodel *modelInimigo;
 } inimigo_t;
 
@@ -513,8 +519,8 @@ void initMap(void){
                         mapaGrupo[j][k] = VAZIO;
                     }
                     if( ptrSuperior[2] == COR_INIMIGO_R && ptrSuperior[1] == COR_INIMIGO_G && ptrSuperior[0] == COR_INIMIGO_B){
-                        mapaElementos[j][k] = INIMIGO; // Apenas precisamos das coordendas, não é necessario setar um elemento no mapa
                         quantidade_inimigos++;
+                        mapaElementos[j][k] = INIMIGO+quantidade_inimigos; // Apenas precisamos das coordendas, não é necessario setar um elemento no mapa
                         inimigo[quantidade_inimigos] = (inimigo_t*)malloc(sizeof(inimigo_t));
                         inimigo[quantidade_inimigos]->modelInimigo = NULL;
                         inimigo[quantidade_inimigos]->x = (j - 10)+0.5;
@@ -523,6 +529,7 @@ void initMap(void){
                         inimigo[quantidade_inimigos]->direcao = DIRECAO_SUL;
                         inimigo[quantidade_inimigos]->estado = VIVO;
                         inimigo[quantidade_inimigos]->qntTurnoDirecao = MIN_MOVIMENTOS_DIRECAO;
+                        inimigo[quantidade_inimigos]->empurrado = ZERO;
                         //printf("Inimigo: %d \t X: %d \t Z: %d \t J: %d \t K: %d \n",quantidade_inimigos,inimigo[quantidade_inimigos]->x,inimigo[quantidade_inimigos]->z,j,k);
                     }
                     if( ptrSuperior[2] == COR_BURACO_R && ptrSuperior[1] == COR_BURACO_G && ptrSuperior[0] == COR_BURACO_B){
@@ -632,7 +639,8 @@ void renderFloor(int tipoElemento, int texturaValor, int elementOverFloor) {
         for (int j = 0; j < zQuads; j++) {
 
             if(elementOverFloor == TRUE){
-                if(mapaElementos[i][j] != tipoElemento) continue;
+                if(tipoElemento == INIMIGO && mapaElementos[i][j] < INIMIGO) continue;
+                if(tipoElemento != INIMIGO && mapaElementos[i][j] != tipoElemento) continue;
             }else{
                 if(mapaCenario[i][j] != tipoElemento || mapaElementos[i][j] != VAZIO) continue;
             }
@@ -700,6 +708,7 @@ void renderScene() {
 void updateInimigoState(){
     int i, j, k, l, novaDirecao, movimentoInvalido = FALSE;
     float iSpeedX, iSpeedZ;
+    if(turnosImunidade> 0) turnosImunidade--;
 
     for(i = 0 ; i <= quantidade_inimigos; i++){
         movimentoInvalido = FALSE;
@@ -718,8 +727,8 @@ void updateInimigoState(){
             continue;
         }
 
-
-        if(abs(j - (int)(posX+10)) < MIN_DISTANCIA_PERSEGUICAO && abs(k - (int)(posZ+10)) < MIN_DISTANCIA_PERSEGUICAO){
+        if( turnosImunidade == 0 &&
+           (abs(j - (int)(posX+10)) < MIN_DISTANCIA_PERSEGUICAO && abs(k - (int)(posZ+10)) < MIN_DISTANCIA_PERSEGUICAO) ) {
             novaDirecao = perseguirJogador(i);
         }else{
             inimigo[i]->qntTurnoDirecao--;
@@ -754,15 +763,15 @@ void updateInimigoState(){
             }
         }
         if(movimentoInvalido == TRUE){
-            printf("Invalido\n");
             continue;
         }
+
 
 
         // Remove referencia do INIMIGO da posicao anterior
         j = inimigo[i]->x + 10;
         k = inimigo[i]->z + 10;
-        if(mapaElementos[j][k] == INIMIGO){
+        if(mapaElementos[j][k] == INIMIGO+i){
             mapaElementos[j][k] = VAZIO;
         }
         //////
@@ -773,8 +782,8 @@ void updateInimigoState(){
 
         j = inimigo[i]->x + 10;
         k = inimigo[i]->z + 10;
-        mapaElementos[j][k] = INIMIGO; // Posiciona o INIMIGO na nova posicao
-        if(j == (int)(posX+10) && k == (int)(posZ+10)){ // Se o INIMIGO atingiiu o JOGADOR
+        mapaElementos[j][k] = INIMIGO+i; // Posiciona o INIMIGO na nova posicao
+        if(j == (int)(posX+10) && k == (int)(posZ+10)){ // Se o INIMIGO atingiu o JOGADOR
             gerenciarColisao(mapaCenario[j][k],mapaElementos[j][k]);
         }
     }
@@ -822,7 +831,6 @@ int perseguirJogador (int inimigoIndice){
 
     return melhorDirecao;
 }
-
 
 
 void updateState() {
@@ -1037,6 +1045,11 @@ void onKeyDown(unsigned char key, int x, int y) {
 		case 114: //r
 			running = true;
 			break;
+		case 102: //f
+		case 70: //F
+			acaoEmpurrar();
+			break;
+
 		case 118: //v
         case 86: //V
             switch(modoJogo){
@@ -1103,6 +1116,27 @@ void onKeyUp(unsigned char key, int x, int y) {
 	//glutPostRedisplay();
 }
 
+void acaoEmpurrar(){
+	int jEmpurrar = posX+10;
+	int kEmpurrar = posZ+10;
+
+    int direcaoEmpurrar = direcao;
+    int rSpeedX, rSpeedZ;
+    rSpeedX = rSpeedZ = 0;
+
+    if(direcaoEmpurrar == DIRECAO_NORTE) rSpeedZ--;
+    if(direcaoEmpurrar == DIRECAO_SUL) rSpeedZ++;
+    if(direcaoEmpurrar == DIRECAO_LESTE) rSpeedX++;
+    if(direcaoEmpurrar == DIRECAO_OESTE) rSpeedX--;
+
+    jEmpurrar += rSpeedX;
+    kEmpurrar += rSpeedZ;
+    if(mapaElementos[jEmpurrar][kEmpurrar] >= INIMIGO){
+        int inimigoEmpurrado = mapaElementos[jEmpurrar][kEmpurrar] - INIMIGO;
+        inimigo[inimigoEmpurrado]->empurrado = EMPURRAR_DISTANCIA;
+    }
+    printf("Empurrar %d %d \n", jEmpurrar, kEmpurrar);
+}
 
 int acaoCriarRachadura(){
 	int jBuraco = posX+10;
@@ -1216,13 +1250,14 @@ void desmoronarMapa(int grupo){
 
 void gerenciarColisao(int posicaoCenario, int posicaoElemento){
     //printf("Colisao \t\t Cenario: %d \t Elemento: %d \n",posicaoCenario, posicaoElemento);
-    if(posicaoCenario == VAZIO || posicaoElemento == INIMIGO){
+    if(posicaoCenario == VAZIO || posicaoElemento >= INIMIGO){
         resetStage();
     }
 
 }
 
 void resetStage(){
+    turnosImunidade = TURNOS_IMUNIDADE;
     nextPosX = posX = initialPosX;
     nextPosZ = posZ = initialPosZ;
 }
