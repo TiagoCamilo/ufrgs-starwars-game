@@ -837,73 +837,42 @@ int perseguirJogador (int inimigoIndice){
 
 
 void updateState() {
-
     if (leftPressed) {
-        leftPressed = false; // Simula um "delay" pois a rotacao estava muito rapida.
-
-        if(modoJogo == JOGO_1P || modoJogo == JOGO_3P) {
-            roty -= 90.0f;
+        if(direcao != DIRECAO_OESTE){
+            direcao = DIRECAO_OESTE;
+            return;
         }
-
-        if(direcao == DIRECAO_NORTE) direcao = DIRECAO_OESTE;
-        else direcao--;
-	}
-
-	if (rightPressed) {
-        rightPressed = false; // Simula um "delay" pois a rotacao estava muito rapida.
-
-        if(modoJogo == JOGO_1P || modoJogo == JOGO_3P) {
-            roty += 90.0f;
+        speedX = -maxSpeed * cos(roty*PI/180);
+        speedZ = 0;
+    }
+    if (rightPressed) {
+        if(direcao != DIRECAO_LESTE){
+            direcao = DIRECAO_LESTE;
+            return;
         }
-
-        if(direcao == DIRECAO_OESTE) direcao = DIRECAO_NORTE;
-        else direcao++;
-	}
-
-    //printf("Direcao: %d", direcao);
-
-	if (upPressed || downPressed) {
-
-        /*if(modoJogo == JOGO_1P || modoJogo == JOGO_3P) {
-            speedX = maxSpeed * sin(roty*PI/180);
-            speedZ = -maxSpeed * cos(roty*PI/180);
-        }else{ //Se JOGO_2D*/
-
-            if(direcao == DIRECAO_NORTE){
-                speedX = 0;
-                speedZ = -maxSpeed * cos(roty*PI/180);
-            }
-
-            if(direcao == DIRECAO_SUL){
-                speedX = 0;
-                speedZ = maxSpeed * cos(roty*PI/180);
-            }
-
-            if(direcao == DIRECAO_LESTE){
-                speedX = maxSpeed * cos(roty*PI/180);
-                speedZ = 0;
-            }
-
-            if(direcao == DIRECAO_OESTE){
-                speedX = -maxSpeed * cos(roty*PI/180);
-                speedZ = 0;
-            }
-
-        //}
-
-		// efeito de "sobe e desce" ao andar
-		headPosAux += 8.5f;
-		if (headPosAux > 180.0f) {
-			headPosAux = 0.0f;
-		}
-
-        if (upPressed) {
-            nextPosX += speedX;
-            nextPosZ += speedZ;
-        } else {
-            nextPosX -= speedX;
-            nextPosZ -= speedZ;
+        speedX = maxSpeed * cos(roty*PI/180);
+        speedZ = 0;
+    }
+    if (upPressed) {
+        if(direcao != DIRECAO_NORTE) {
+            direcao = DIRECAO_NORTE;
+            return;
         }
+        speedX = 0;
+        speedZ = -maxSpeed * cos(roty*PI/180);
+    }
+    if (downPressed) {
+        if(direcao != DIRECAO_SUL){
+            direcao = DIRECAO_SUL;
+            return;
+        }
+        speedX = 0;
+        speedZ = maxSpeed * cos(roty*PI/180);
+    }
+
+    if(leftPressed || rightPressed || upPressed || downPressed){
+        nextPosX += speedX;
+        nextPosZ += speedZ;
 
         int j = nextPosX + 10;
         int k = nextPosZ + 10;
@@ -917,23 +886,9 @@ void updateState() {
             nextPosX = posX;
             nextPosZ = posZ;
         }
+    }
 
-	} else {
-		// parou de andar, para com o efeito de "sobe e desce"
-		headPosAux = fmod(headPosAux, 90) - 1 * headPosAux / 90;
-		headPosAux -= 4.0f;
-		if (headPosAux < 0.0f) {
-			headPosAux = 0.0f;
-		}
-	}
 
-	posY += speedY;
-	if (posY < heightLimit) {
-		posY = heightLimit;
-		speedY = 0.0f;
-	} else {
-		speedY -= gravity;
-	}
 
 }
 
