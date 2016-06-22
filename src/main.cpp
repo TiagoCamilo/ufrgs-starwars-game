@@ -135,7 +135,7 @@ void mainIdle();
 int main(int argc, char **argv);
 void setWindow();
 void setViewport(GLint left, GLint right, GLint bottom, GLint top);
-void updateState();
+void updateState2D();
 void renderFloor();
 void updateCam();
 
@@ -312,7 +312,7 @@ Atualiza a posição e orientação da camera
 void updateCam() {
 
     if(modoJogo == JOGO_1P){
-    gluLookAt(posX,posY + 0.025 + posYOffset + 0.025 * std::abs(sin(PI/180)),posZ,
+    gluLookAt(posX,posY + 0.5 + posYOffset + 0.025 * std::abs(sin(PI/180)),posZ,
 		posX + sin(roty*PI/180),posY + posYOffset + 0.025 * std::abs(sin(PI/180)) + cos(rotx*PI/180),posZ -cos(roty*PI/180),
 		0.0,1.0,0.0);
         /*gluLookAt(posX,posY+2,posZ+1,
@@ -339,7 +339,7 @@ void updateCam() {
 	source0Pos[1] = posY;
 	source0Pos[2] = posZ;
 
-    GLfloat light_position1[] = {posX, posY, posZ, 1.0 };
+    //GLfloat light_position1[] = {posX, posY, posZ, 1.0 };
     //glLightfv(GL_LIGHT0, GL_POSITION, light_position1);
 
 
@@ -381,7 +381,7 @@ void mainInit() {
     initSound();
 
     initTexture("textura-espaco.bmp", TEXTURA_AGUA);
-    initTexture("textura-nave.bmp", TEXTURA_GRAMA);
+    initTexture("textura-grama.bmp", TEXTURA_GRAMA);
     initTexture("textura-buraco-nave.bmp", TEXTURA_BURACO);
     initTexture("textura-rachadura-nave.bmp", TEXTURA_RACHADURA);
 
@@ -684,7 +684,7 @@ void renderScene() {
 	updateCam();
 
     glPushMatrix();
-        glTranslatef(posX,1.0,posZ);
+        glTranslatef(posX,0.3,posZ);
         if(modoJogo== JOGO_2D) glRotatef((180 - (direcao*90)),0,1,0);
         glmDraw(modelSphere, GLM_SMOOTH | GLM_MATERIAL | GLM_TEXTURE);
 	glPopMatrix();
@@ -836,7 +836,7 @@ int perseguirJogador (int inimigoIndice){
 }
 
 
-void updateState() {
+void updateState2D() {
     if (leftPressed) {
         if(direcao != DIRECAO_OESTE){
             direcao = DIRECAO_OESTE;
@@ -887,16 +887,77 @@ void updateState() {
             nextPosZ = posZ;
         }
     }
+}
 
+void updateState3D() {
+
+    if (leftPressed) {
+        leftPressed = false; // Simula um "delay" pois a rotacao estava muito rapida.
+
+        if(modoJogo == JOGO_1P || modoJogo == JOGO_3P) {
+            roty -= 90.0f;
+        }
+
+        if(direcao == DIRECAO_NORTE) direcao = DIRECAO_OESTE;
+        else direcao--;
+	}
+
+	if (rightPressed) {
+        rightPressed = false; // Simula um "delay" pois a rotacao estava muito rapida.
+
+        if(modoJogo == JOGO_1P || modoJogo == JOGO_3P) {
+            roty += 90.0f;
+        }
+
+        if(direcao == DIRECAO_OESTE) direcao = DIRECAO_NORTE;
+        else direcao++;
+	}
+
+
+
+	if (upPressed || downPressed) {
+        speedX = maxSpeed * sin(roty*PI/180);
+        speedZ = -maxSpeed * cos(roty*PI/180);
+
+        if (upPressed) {
+            nextPosX += speedX;
+            nextPosZ += speedZ;
+        } else {
+            nextPosX -= speedX;
+            nextPosZ -= speedZ;
+        }
+
+        int j = nextPosX + 10;
+        int k = nextPosZ + 10;
+        if(mapaCenario[j][k] == BLOCO){
+            //posX = floor(nextPosX)+0.5;
+            posX = nextPosX;
+            //posZ = floor(nextPosZ)+0.5;
+            posZ = nextPosZ;
+        }else{
+            gerenciarColisao(mapaCenario[j][k], mapaElementos[j][k]);
+            nextPosX = posX;
+            nextPosZ = posZ;
+        }
+
+	}
 
 
 }
+
+
+
 
 /**
 Render scene
 */
 void mainRender() {
-	updateState();
+    if(modoJogo == JOGO_2D)
+        updateState2D();
+    else
+        updateState3D();
+
+
 	updateInimigoState();
 	renderScene();
 	glFlush();
@@ -1013,6 +1074,7 @@ void onKeyDown(unsigned char key, int x, int y) {
             switch(modoJogo){
                 case JOGO_1P:
                     modoJogo = JOGO_2D;
+                    roty = 0.0f;
                     break;
                 case JOGO_2D:
                     modoJogo = JOGO_3P;
