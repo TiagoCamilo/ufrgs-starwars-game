@@ -762,3 +762,81 @@
 1398840812 source:c:\users\tiago\desktop\trabalho computação grafica\computacaografica\src\texture.cpp
 	"Texture.h"
 
+1464912358 source:c:\users\tiago\desktop\computação grafica\computacaografica\src\bitmap.c
+	"bitmap.h"
+	<stdio.h>
+	<stdlib.h>
+	<errno.h>
+
+1464912358 c:\users\tiago\desktop\computação grafica\computacaografica\src\bitmap.h
+	<GL/glut.h>
+	<windows.h>
+	<wingdi.h>
+
+1464912358 c:\users\tiago\desktop\computação grafica\computacaografica\codeblocks\include\gl\glut.h
+	<windows.h>
+	<GL/gl.h>
+	<GL/glu.h>
+
+1464912358 c:\users\tiago\desktop\computação grafica\computacaografica\codeblocks\include\gl\gl.h
+
+1464912358 c:\users\tiago\desktop\computação grafica\computacaografica\codeblocks\include\gl\glu.h
+	<stddef.h>
+	<GL/gl.h>
+
+1464912358 source:c:\users\tiago\desktop\computação grafica\computacaografica\src\glm.cpp
+	<math.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<assert.h>
+	"glm.h"
+
+1464912358 c:\users\tiago\desktop\computação grafica\computacaografica\src\glm.h
+	<GLUT/glut.h>
+	<GL/gl.h>
+	<GL/glut.h>
+
+1464912358 source:c:\users\tiago\desktop\computação grafica\computacaografica\src\glmimg.cpp
+	<string.h>
+	<math.h>
+	"Texture.h"
+	<windows.h>
+	<GL/gl.h>
+	"glm.h"
+
+1464912358 c:\users\tiago\desktop\computação grafica\computacaografica\src\texture.h
+	<windows.h>
+	<windowsx.h>
+	<stdlib.h>
+	<stdio.h>
+	<GL/glut.h>
+	<math.h>
+
+1466610543 source:c:\users\tiago\desktop\computação grafica\computacaografica\src\main.cpp
+	<windows.h>
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	<cmath>
+	<iostream>
+	<gl/glut.h>
+	"glm.h"
+	<al/alut.h>
+	"bitmap.h"
+
+1464912358 c:\users\tiago\desktop\computação grafica\computacaografica\codeblocks\include\al\alut.h
+	<al/alc.h>
+	<al/al.h>
+	<OpenAL/alc.h>
+	<OpenAL/al.h>
+	<AL/al.h>
+	<AL/alc.h>
+
+1464912358 c:\users\tiago\desktop\computação grafica\computacaografica\codeblocks\include\al\alc.h
+
+1464912358 c:\users\tiago\desktop\computação grafica\computacaografica\codeblocks\include\al\al.h
+
+1464912358 source:c:\users\tiago\desktop\computação grafica\computacaografica\src\texture.cpp
+	"Texture.h"
+

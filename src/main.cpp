@@ -64,7 +64,7 @@ seja uma spotlight;
 #define DIRECAO_OESTE 3
 
 #define MIN_MOVIMENTOS_DIRECAO 5
-#define MIN_DISTANCIA_PERSEGUICAO 4
+#define MIN_DISTANCIA_PERSEGUICAO 5
 #define TURNOS_IMUNIDADE 100
 #define EMPURRAR_DISTANCIA 2
 
@@ -312,9 +312,12 @@ Atualiza a posição e orientação da camera
 void updateCam() {
 
     if(modoJogo == JOGO_1P){
-        gluLookAt(posX,posY+2,posZ+1,
+    gluLookAt(posX,posY + 0.025 + posYOffset + 0.025 * std::abs(sin(PI/180)),posZ,
+		posX + sin(roty*PI/180),posY + posYOffset + 0.025 * std::abs(sin(PI/180)) + cos(rotx*PI/180),posZ -cos(roty*PI/180),
+		0.0,1.0,0.0);
+        /*gluLookAt(posX,posY+2,posZ+1,
             posX + sin(roty*PI/180),posY+1+ 0.025 * std::abs(sin(headPosAux*PI/180)) + cos(rotx*PI/180),posZ -cos(roty*PI/180),
-            0.0,1.0,0.0);
+            0.0,1.0,0.0);*/
     }
     if(modoJogo == JOGO_2D){
         gluLookAt(posX,posY+15,posZ,
@@ -322,7 +325,7 @@ void updateCam() {
             0.0,1.0,0.0);
     }
     if(modoJogo == JOGO_3P){
-        gluLookAt(posX,posY+10,posZ+7,
+        gluLookAt(posX,posY + 0.5 + posYOffset + 0.025 * std::abs(sin(PI/180)),posZ+7,
             posX + sin(roty*PI/180),posY+ 0.025 * std::abs(sin(headPosAux*PI/180)) + cos(rotx*PI/180),posZ -cos(roty*PI/180),
             0.0,1.0,0.0);
     }
@@ -525,7 +528,7 @@ void initMap(void){
                         inimigo[quantidade_inimigos]->modelInimigo = NULL;
                         inimigo[quantidade_inimigos]->x = (j - 10)+0.5;
                         inimigo[quantidade_inimigos]->z = (k - 10)+0.5;
-                        inimigo[quantidade_inimigos]->y = 1.0;
+                        inimigo[quantidade_inimigos]->y = 0.3;
                         inimigo[quantidade_inimigos]->direcao = DIRECAO_SUL;
                         inimigo[quantidade_inimigos]->estado = VIVO;
                         inimigo[quantidade_inimigos]->qntTurnoDirecao = MIN_MOVIMENTOS_DIRECAO;
@@ -682,7 +685,7 @@ void renderScene() {
 
     glPushMatrix();
         glTranslatef(posX,1.0,posZ);
-        glRotatef((180 - (direcao*90)),0,1,0);
+        if(modoJogo== JOGO_2D) glRotatef((180 - (direcao*90)),0,1,0);
         glmDraw(modelSphere, GLM_SMOOTH | GLM_MATERIAL | GLM_TEXTURE);
 	glPopMatrix();
 
@@ -905,10 +908,10 @@ void updateState() {
         int j = nextPosX + 10;
         int k = nextPosZ + 10;
         if(mapaCenario[j][k] == BLOCO){
-            posX = floor(nextPosX)+0.5;
-            //posX = nextPosX;
-            posZ = floor(nextPosZ)+0.5;
-            //posZ = nextPosZ;
+            //posX = floor(nextPosX)+0.5;
+            posX = nextPosX;
+            //posZ = floor(nextPosZ)+0.5;
+            posZ = nextPosZ;
         }else{
             gerenciarColisao(mapaCenario[j][k], mapaElementos[j][k]);
             nextPosX = posX;
