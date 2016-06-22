@@ -199,7 +199,7 @@ variavel auxiliar pra dar variação na altura do ponto de vista ao andar.
 float headPosAux = 0.0f;
 
 float maxSpeed = 0.25f;
-float maxInimigoSpeed = 0.05f;
+float maxInimigoSpeed = 0.025f;
 
 float planeSize = 20.0f;
 
@@ -905,10 +905,10 @@ void updateState() {
         int j = nextPosX + 10;
         int k = nextPosZ + 10;
         if(mapaCenario[j][k] == BLOCO){
-            //posX = floor(nextPosX)+0.5;
-            posX = nextPosX;
-            //posZ = floor(nextPosZ)+0.5;
-            posZ = nextPosZ;
+            posX = floor(nextPosX)+0.5;
+            //posX = nextPosX;
+            posZ = floor(nextPosZ)+0.5;
+            //posZ = nextPosZ;
         }else{
             gerenciarColisao(mapaCenario[j][k], mapaElementos[j][k]);
             nextPosX = posX;
@@ -1133,7 +1133,16 @@ void acaoEmpurrar(){
     kEmpurrar += rSpeedZ;
     if(mapaElementos[jEmpurrar][kEmpurrar] >= INIMIGO){
         int inimigoEmpurrado = mapaElementos[jEmpurrar][kEmpurrar] - INIMIGO;
-        inimigo[inimigoEmpurrado]->empurrado = EMPURRAR_DISTANCIA;
+        //inimigo[inimigoEmpurrado]->empurrado = EMPURRAR_DISTANCIA;
+
+        mapaElementos[jEmpurrar][kEmpurrar] = VAZIO;
+        inimigo[inimigoEmpurrado]->x += rSpeedX*2;
+        inimigo[inimigoEmpurrado]->z += rSpeedZ*2;
+
+        jEmpurrar = inimigo[inimigoEmpurrado]->x+10;
+        kEmpurrar = inimigo[inimigoEmpurrado]->z+10;
+        //mapaElementos[jEmpurrar][kEmpurrar] = INIMIGO;
+
     }
     printf("Empurrar %d %d \n", jEmpurrar, kEmpurrar);
 }
