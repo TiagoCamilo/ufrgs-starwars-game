@@ -320,13 +320,10 @@ void updateCam() {
         gluLookAt(posX,posY+15,posZ,
             posX + sin(0*PI/180),posY+ 0.025 * std::abs(sin(headPosAux*PI/180)) + cos(rotx*PI/180),posZ -cos(0*PI/180),
             0.0,1.0,0.0);
-        /*gluLookAt(posX,posY+15,posZ,
-            posX + sin(roty*PI/180),posY+ 0.025 * std::abs(sin(headPosAux*PI/180)) + cos(rotx*PI/180),posZ -cos(roty*PI/180),
-            0.0,1.0,0.0);*/
     }
     if(modoJogo == JOGO_3P){
-        gluLookAt(posX,posY + 0.5 + posYOffset + 0.025 * std::abs(sin(PI/180)),posZ-3,
-            posX + sin(roty*PI/180),posY + posYOffset + 0.025 * std::abs(sin(PI/180)) + cos(rotx*PI/180),posZ -cos(roty*PI/180),
+        gluLookAt(posX,posY + 2 +  posYOffset + 0.025 * std::abs(sin(PI/180)) + cos(rotx*PI/180),posZ + 8,
+            posX + sin(0*PI/180),posY+ 0.025 * std::abs(sin(headPosAux*PI/180)) + cos(rotx*PI/180),posZ -cos(0*PI/180),
             0.0,1.0,0.0);
     }
 
@@ -685,10 +682,10 @@ void renderScene() {
 
     glPushMatrix();
         glTranslatef(posX,0.3,posZ);
-        if(modoJogo == JOGO_2D){
-            glRotatef((180 - (direcao*90)),0,1,0);
-        }else { // Se for 1P ou 3P
+        if(modoJogo == JOGO_1P){
             glRotatef(roty,0,1,0);
+        }else { // Se for 1P ou 3P
+            glRotatef((180 - (direcao*90)),0,1,0);
         }
         glmDraw(modelSphere, GLM_SMOOTH | GLM_MATERIAL | GLM_TEXTURE);
 	glPopMatrix();
@@ -899,7 +896,7 @@ void updateState3D() {
     if (leftPressed) {
         leftPressed = false; // Simula um "delay" pois a rotacao estava muito rapida.
 
-        if(modoJogo == JOGO_1P || modoJogo == JOGO_3P) {
+        if(modoJogo == JOGO_1P) {
             if(roty - 90 < 0.0f){
                 roty = 360.0f;
             }
@@ -913,7 +910,7 @@ void updateState3D() {
 	if (rightPressed) {
         rightPressed = false; // Simula um "delay" pois a rotacao estava muito rapida.
 
-        if(modoJogo == JOGO_1P || modoJogo == JOGO_3P) {
+        if(modoJogo == JOGO_1P) {
             if(roty + 90 > 360.f){
                 roty = 0.0f;
             }
@@ -961,10 +958,10 @@ void updateState3D() {
 Render scene
 */
 void mainRender() {
-    if(modoJogo == JOGO_2D)
-        updateState2D();
-    else
+    if(modoJogo == JOGO_1P)
         updateState3D();
+    else
+        updateState2D();
 
 
 	updateInimigoState();
@@ -1085,7 +1082,6 @@ void onKeyDown(unsigned char key, int x, int y) {
             switch(modoJogo){
                 case JOGO_1P:
                     modoJogo = JOGO_2D;
-                    roty = 0.0f;
                     break;
                 case JOGO_2D:
                     modoJogo = JOGO_3P;
@@ -1096,10 +1092,10 @@ void onKeyDown(unsigned char key, int x, int y) {
             }
 
             //roty = rotyAux;
-            if(modoJogo != JOGO_2D && direcao == DIRECAO_NORTE) roty = 0.0f;
-            if(modoJogo != JOGO_2D && direcao == DIRECAO_LESTE) roty = 90.0f;
-            if(modoJogo != JOGO_2D && direcao == DIRECAO_SUL) roty = 180.0f;
-            if(modoJogo != JOGO_2D && direcao == DIRECAO_OESTE) roty = 270.0f;
+            if(modoJogo == JOGO_1P && direcao == DIRECAO_NORTE) roty = 0.0f;
+            if(modoJogo == JOGO_1P && direcao == DIRECAO_LESTE) roty = 90.0f;
+            if(modoJogo == JOGO_1P && direcao == DIRECAO_SUL) roty = 180.0f;
+            if(modoJogo == JOGO_1P && direcao == DIRECAO_OESTE) roty = 270.0f;
 
 
 		default:
@@ -1193,7 +1189,7 @@ int acaoCriarRachadura(){
 	}
 
     int direcaoRachadura = direcao;
-    if(modoJogo != JOGO_2D){
+    if(modoJogo == JOGO_1P){
         if(roty == 0.0f) direcaoRachadura = DIRECAO_NORTE;
         if(roty == 90.f) direcaoRachadura = DIRECAO_LESTE;
         if(roty == 180.0f) direcaoRachadura = DIRECAO_SUL;
