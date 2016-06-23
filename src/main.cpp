@@ -64,7 +64,7 @@ seja uma spotlight;
 #define DIRECAO_OESTE 3
 
 #define MIN_MOVIMENTOS_DIRECAO 5
-#define MIN_DISTANCIA_PERSEGUICAO 5
+#define MIN_DISTANCIA_PERSEGUICAO 0
 #define TURNOS_IMUNIDADE 100
 #define EMPURRAR_DISTANCIA 2
 
@@ -312,21 +312,21 @@ Atualiza a posição e orientação da camera
 void updateCam() {
 
     if(modoJogo == JOGO_1P){
-    gluLookAt(posX,posY + 0.5 + posYOffset + 0.025 * std::abs(sin(PI/180)),posZ,
-		posX + sin(roty*PI/180),posY + posYOffset + 0.025 * std::abs(sin(PI/180)) + cos(rotx*PI/180),posZ -cos(roty*PI/180),
-		0.0,1.0,0.0);
-        /*gluLookAt(posX,posY+2,posZ+1,
-            posX + sin(roty*PI/180),posY+1+ 0.025 * std::abs(sin(headPosAux*PI/180)) + cos(rotx*PI/180),posZ -cos(roty*PI/180),
-            0.0,1.0,0.0);*/
+        gluLookAt(posX,posY + 0.7 + posYOffset + 0.025 * std::abs(sin(PI/180)),posZ,
+            posX + sin(roty*PI/180),posY + posYOffset + 0.025 * std::abs(sin(PI/180)) + cos(rotx*PI/180),posZ -cos(roty*PI/180),
+            0.0,1.0,0.0);
     }
     if(modoJogo == JOGO_2D){
         gluLookAt(posX,posY+15,posZ,
-            posX + sin(roty*PI/180),posY+ 0.025 * std::abs(sin(headPosAux*PI/180)) + cos(rotx*PI/180),posZ -cos(roty*PI/180),
+            posX + sin(0*PI/180),posY+ 0.025 * std::abs(sin(headPosAux*PI/180)) + cos(rotx*PI/180),posZ -cos(0*PI/180),
             0.0,1.0,0.0);
+        /*gluLookAt(posX,posY+15,posZ,
+            posX + sin(roty*PI/180),posY+ 0.025 * std::abs(sin(headPosAux*PI/180)) + cos(rotx*PI/180),posZ -cos(roty*PI/180),
+            0.0,1.0,0.0);*/
     }
     if(modoJogo == JOGO_3P){
-        gluLookAt(posX,posY + 0.5 + posYOffset + 0.025 * std::abs(sin(PI/180)),posZ+7,
-            posX + sin(roty*PI/180),posY+ 0.025 * std::abs(sin(headPosAux*PI/180)) + cos(rotx*PI/180),posZ -cos(roty*PI/180),
+        gluLookAt(posX,posY + 0.5 + posYOffset + 0.025 * std::abs(sin(PI/180)),posZ-3,
+            posX + sin(roty*PI/180),posY + posYOffset + 0.025 * std::abs(sin(PI/180)) + cos(rotx*PI/180),posZ -cos(roty*PI/180),
             0.0,1.0,0.0);
     }
 
@@ -685,7 +685,11 @@ void renderScene() {
 
     glPushMatrix();
         glTranslatef(posX,0.3,posZ);
-        if(modoJogo== JOGO_2D) glRotatef((180 - (direcao*90)),0,1,0);
+        if(modoJogo == JOGO_2D){
+            glRotatef((180 - (direcao*90)),0,1,0);
+        }else { // Se for 1P ou 3P
+            glRotatef(roty,0,1,0);
+        }
         glmDraw(modelSphere, GLM_SMOOTH | GLM_MATERIAL | GLM_TEXTURE);
 	glPopMatrix();
 
@@ -846,6 +850,7 @@ void updateState2D() {
         speedZ = 0;
     }
     if (rightPressed) {
+
         if(direcao != DIRECAO_LESTE){
             direcao = DIRECAO_LESTE;
             return;
@@ -895,6 +900,9 @@ void updateState3D() {
         leftPressed = false; // Simula um "delay" pois a rotacao estava muito rapida.
 
         if(modoJogo == JOGO_1P || modoJogo == JOGO_3P) {
+            if(roty - 90 < 0.0f){
+                roty = 360.0f;
+            }
             roty -= 90.0f;
         }
 
@@ -906,14 +914,15 @@ void updateState3D() {
         rightPressed = false; // Simula um "delay" pois a rotacao estava muito rapida.
 
         if(modoJogo == JOGO_1P || modoJogo == JOGO_3P) {
+            if(roty + 90 > 360.f){
+                roty = 0.0f;
+            }
             roty += 90.0f;
         }
 
         if(direcao == DIRECAO_OESTE) direcao = DIRECAO_NORTE;
         else direcao++;
 	}
-
-
 
 	if (upPressed || downPressed) {
         speedX = maxSpeed * sin(roty*PI/180);
@@ -1037,6 +1046,8 @@ void onKeyDown(unsigned char key, int x, int y) {
 	switch (key) {
 		case 32: //space
 			spacePressed = true;
+            printf("Direcao Rachadura %f \t %d\n",roty, direcao);
+
 			acaoCriarRachadura();
 			break;
 		case 119: //w
@@ -1083,6 +1094,13 @@ void onKeyDown(unsigned char key, int x, int y) {
                     modoJogo = JOGO_1P;
                     break;
             }
+
+            //roty = rotyAux;
+            if(modoJogo != JOGO_2D && direcao == DIRECAO_NORTE) roty = 0.0f;
+            if(modoJogo != JOGO_2D && direcao == DIRECAO_LESTE) roty = 90.0f;
+            if(modoJogo != JOGO_2D && direcao == DIRECAO_SUL) roty = 180.0f;
+            if(modoJogo != JOGO_2D && direcao == DIRECAO_OESTE) roty = 270.0f;
+
 
 		default:
 			break;
@@ -1175,6 +1193,13 @@ int acaoCriarRachadura(){
 	}
 
     int direcaoRachadura = direcao;
+    if(modoJogo != JOGO_2D){
+        if(roty == 0.0f) direcaoRachadura = DIRECAO_NORTE;
+        if(roty == 90.f) direcaoRachadura = DIRECAO_LESTE;
+        if(roty == 180.0f) direcaoRachadura = DIRECAO_SUL;
+        if(roty == 270.0f) direcaoRachadura = DIRECAO_OESTE;
+    }
+    printf("Direcao Rachadura %f \t %d \t %d\n",roty, direcao, direcaoRachadura);
     int rSpeedX, rSpeedZ;
     rSpeedX = rSpeedZ = 0;
 
@@ -1208,7 +1233,7 @@ void gerenciarMapa(){
         floodFill(jPrimeiroQuadrado, kPrimeiroQuadrado, GRUPO2, GRUPO1);
     }
 
-    debugMap();
+    //debugMap();
 
     int j, k, jPrimeiroGrupo1, kPrimeiroGrupo1, jPrimeiroGrupo2, kPrimeiroGrupo2, grupo1, grupo2;
     jPrimeiroGrupo1 = kPrimeiroGrupo1 = jPrimeiroGrupo2 = kPrimeiroGrupo2 = -1;
