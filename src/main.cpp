@@ -1313,8 +1313,19 @@ void gerenciarColisao(int posicaoCenario, int posicaoElemento){
 
 void resetStage(){
     turnosImunidade = TURNOS_IMUNIDADE;
-    nextPosX = posX = initialPosX;
-    nextPosZ = posZ = initialPosZ;
+    int j, k;
+    for(j = 0 ; j < 20 ; j++){
+        for(k = 0 ; k < 20 ; k++){
+            if(mapaCenario[j][k] == BLOCO && mapaElementos[j][k] == VAZIO){
+                nextPosX = posX = (j - 10)+0.5;
+                nextPosZ = posZ = (k - 10)+0.5;
+                j = k = 20;
+                break;
+            }
+        }
+    }
+
+
 }
 
 int floodFill(int x , int y, int grupoAlvo, int grupoNovo ){
