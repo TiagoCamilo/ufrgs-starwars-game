@@ -54,7 +54,9 @@ seja uma spotlight;
 #define TRUE 1
 
 #define ESCALA_JOGADOR 3
-#define ESCALA_INIMIGO 0.5
+#define ESCALA_INIMIGO 3
+#define ALTURA_JOGADOR 0.6
+#define ALTURA_INIMIGO 0.6
 
 #define MORTO 0
 #define VIVO 1
@@ -408,11 +410,11 @@ void mainInit() {
 void initModel() {
 	printf("Loading models.. \n");
 
-	C3DObject_Load_New("TIE-fighter.obj",&modelSphere, JOGADOR);
+	C3DObject_Load_New("TIE-fighter-Inimigo.obj",&modelSphere, JOGADOR);
 
     int i;
     for(i = 0 ; i <= quantidade_inimigos ; i++){
-        C3DObject_Load_New("mk_kart.obj",&inimigo[i]->modelInimigo, INIMIGO);
+        C3DObject_Load_New("TIE-fighter.obj",&inimigo[i]->modelInimigo, INIMIGO);
     }
 	printf("Models ok. \n \n \n");
 }
@@ -529,7 +531,7 @@ void initMap(void){
                         inimigo[quantidade_inimigos]->modelInimigo = NULL;
                         inimigo[quantidade_inimigos]->x = (j - 10)+0.5;
                         inimigo[quantidade_inimigos]->z = (k - 10)+0.5;
-                        inimigo[quantidade_inimigos]->y = 0.3;
+                        inimigo[quantidade_inimigos]->y = ALTURA_INIMIGO;
                         inimigo[quantidade_inimigos]->direcao = DIRECAO_SUL;
                         inimigo[quantidade_inimigos]->estado = VIVO;
                         inimigo[quantidade_inimigos]->qntTurnoDirecao = MIN_MOVIMENTOS_DIRECAO;
@@ -685,7 +687,7 @@ void renderScene() {
 	updateCam();
 
     glPushMatrix();
-        glTranslatef(posX,0.6,posZ);
+        glTranslatef(posX,ALTURA_JOGADOR,posZ);
         if(modoJogo == JOGO_1P){
             glRotatef(roty,0,1,0);
         }else { // Se for 1P ou 3P
@@ -700,7 +702,8 @@ void renderScene() {
         glPushMatrix();
             glTranslatef(inimigo[i]->x,inimigo[i]->y,inimigo[i]->z);
             glRotatef((180 - (inimigo[i]->direcao*90)),0,1,0);
-            glmDraw(inimigo[i]->modelInimigo, GLM_SMOOTH | GLM_MATERIAL | GLM_TEXTURE);
+            //glmDraw(inimigo[i]->modelInimigo, GLM_SMOOTH | GLM_MATERIAL | GLM_TEXTURE);
+            glmDraw(inimigo[i]->modelInimigo, GLM_SMOOTH | GLM_MATERIAL);
         glPopMatrix();
     }
 
