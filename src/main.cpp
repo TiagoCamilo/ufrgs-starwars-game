@@ -53,7 +53,8 @@ seja uma spotlight;
 #define FALSE 0
 #define TRUE 1
 
-#define ESCALA 0.5
+#define ESCALA_JOGADOR 3
+#define ESCALA_INIMIGO 0.5
 
 #define MORTO 0
 #define VIVO 1
@@ -271,7 +272,7 @@ inimigo_t *inimigo[MAXIMO_INIMIGOS];
 int quantidade_inimigos = -1;
 
 // Aux function to load the object using GLM and apply some functions
-bool C3DObject_Load_New(const char *pszFilename, GLMmodel **model){
+bool C3DObject_Load_New(const char *pszFilename, GLMmodel **model, int tipoElemento){
     char aszFilename[256];
     strcpy(aszFilename, pszFilename);
 
@@ -286,7 +287,10 @@ bool C3DObject_Load_New(const char *pszFilename, GLMmodel **model){
     return false;
 
     glmUnitize(*model);
-    glmScale(*model,ESCALA); // USED TO SCALE THE OBJECT
+    if(tipoElemento == JOGADOR)
+        glmScale(*model,ESCALA_JOGADOR); // USED TO SCALE THE OBJECT
+    else
+        glmScale(*model,ESCALA_INIMIGO);
     glmFacetNormals(*model);
     glmVertexNormals(*model, 90.0);
 
@@ -378,7 +382,7 @@ void mainInit() {
     initSound();
 
     initTexture("textura-espaco.bmp", TEXTURA_AGUA);
-    initTexture("textura-grama.bmp", TEXTURA_GRAMA);
+    initTexture("textura-nave.bmp", TEXTURA_GRAMA);
     initTexture("textura-buraco-nave.bmp", TEXTURA_BURACO);
     initTexture("textura-rachadura-nave.bmp", TEXTURA_RACHADURA);
 
@@ -404,11 +408,11 @@ void mainInit() {
 void initModel() {
 	printf("Loading models.. \n");
 
-	C3DObject_Load_New("luigi.obj",&modelSphere);
+	C3DObject_Load_New("TIE-fighter.obj",&modelSphere, JOGADOR);
 
     int i;
     for(i = 0 ; i <= quantidade_inimigos ; i++){
-        C3DObject_Load_New("mk_kart.obj",&inimigo[i]->modelInimigo);
+        C3DObject_Load_New("mk_kart.obj",&inimigo[i]->modelInimigo, INIMIGO);
     }
 	printf("Models ok. \n \n \n");
 }
@@ -681,13 +685,14 @@ void renderScene() {
 	updateCam();
 
     glPushMatrix();
-        glTranslatef(posX,0.3,posZ);
+        glTranslatef(posX,0.6,posZ);
         if(modoJogo == JOGO_1P){
             glRotatef(roty,0,1,0);
         }else { // Se for 1P ou 3P
             glRotatef((180 - (direcao*90)),0,1,0);
         }
-        glmDraw(modelSphere, GLM_SMOOTH | GLM_MATERIAL | GLM_TEXTURE);
+        //glmDraw(modelSphere, GLM_SMOOTH | GLM_MATERIAL | GLM_TEXTURE);
+        glmDraw(modelSphere, GLM_SMOOTH | GLM_MATERIAL);
 	glPopMatrix();
 
     int i;
