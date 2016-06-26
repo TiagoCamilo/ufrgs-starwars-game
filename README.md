@@ -9,7 +9,15 @@ Utilizando tecnologia OpenGL alinhado aos conhecimento adquiridos no decorrer do
 
 **Descrição Geral:**
 
-No jogo manipulamos um personagem que pode se mover nas quatro direções tradicionais (cima, baixo, esquerda, direita) através dos controles WASD.
+O jogo possui 3 tipos de "visão": 2D, 1ª Pessoa e 3ª Pessoa
+
+Controles:
+W - Movimenta para frente
+S - Movimenta para tras
+A - Movimenta para Esquerda [2D e 3ª Pessoa]  | Gira camera 90º Esquerda [1ª Pessoa]
+D - Movimenta para Direita [2D e 3ª Pessoa]  | Gira camera 90º Direita [1ª Pessoa]
+V - Alterna modo de jogo entre 2D, 1ª Pessoa e 3ª Pessoa
+Space - Cria rachadura, somente se o personagem estiver em cima de um buraco
 
 O personagem esta em um mapa finito, e caso atravesse o limite do mapa será caraterizada "derrota".
 
@@ -29,7 +37,13 @@ No mapa existem os elementos:
 * Rachadura
 * * Textura modificada 
 * * O personagem pode andar sobre, os inimigos não.
-* * Quando as rachaduras fecharem um "poligono" o menor poligono será "desmoronado".
+* * A rachadura será criada até o próximo buraco ou o fim do mapa caso não exista buraco em seu caminho.
+* * Quando as rachaduras fecharem um "polígono" o menor polígono será "desmoronado".
+* * * Neste caso foi utilizado o algoritmo recursivo "FloodFill" para contar a quantidade de casas em cada polígono, identificando assim o menor.
+
+O mapa é composto por duas imagens BMP 20x20:
+* A primeira caracteriza o mapa inferior, neste caso define onde será "chão da nave" e onde será "espaço".
+* A segunda caracteriza o mapa superior, neste caso define a posição dos elementos citados acima [Inimigos, Blocos, Buracos, Rachaduras e posição inicial do Jogador].
 
 
 
