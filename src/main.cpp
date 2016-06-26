@@ -1,3 +1,4 @@
+
 /**
 Laboratorio FCG - Pratica 4
 Ultima modificacao: 09/05/2016 - Acompanha bibliotecas: bitmap.c(.h), glm.cpp,
@@ -319,7 +320,7 @@ void updateCam() {
 
     if(modoJogo == JOGO_1P){
         gluLookAt(posX,posY + 0.7 + posYOffset + 0.025 * std::abs(sin(PI/180)),posZ,
-            posX + sin(roty*PI/180),posY + posYOffset + 0.025 * std::abs(sin(PI/180)) + cos(rotx*PI/180),posZ -cos(roty*PI/180),
+            posX + sin(roty*PI/180),posY +0.2 + posYOffset + 0.025 * std::abs(sin(PI/180)) + cos(rotx*PI/180),posZ -cos(roty*PI/180),
             0.0,1.0,0.0);
     }
     if(modoJogo == JOGO_2D){
@@ -353,14 +354,14 @@ void initLight() {
 	glEnable( GL_LIGHT0 );
 
 	GLfloat light_ambient[] = { backgrundColor[0], backgrundColor[1], backgrundColor[2], backgrundColor[3] };
-	GLfloat light_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
+	/*GLfloat light_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
 	GLfloat light_specular[] = { 1.0, 1.0, 1.0, 1.0 };
-	GLfloat light_position1[] = {0.0, 0.0, 0.0, 1.0 };
+	GLfloat light_position1[] = {0.0, 0.0, 0.0, 1.0 };*/
 
 	glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+	/*glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-	glLightfv(GL_LIGHT0, GL_POSITION, light_position1);
+	glLightfv(GL_LIGHT0, GL_POSITION, light_position1);*/
 
 }
 
@@ -726,7 +727,7 @@ void updateInimigoState(){
         movimentoInvalido = FALSE;
         if(inimigo[i]->estado == MORTO){
             if(inimigo[i]->y < 20){
-                inimigo[i]->y += 0.5;
+                inimigo[i]->y += 0.25;
             }
             continue;
         }
