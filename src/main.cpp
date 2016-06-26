@@ -851,7 +851,7 @@ void updateState2D() {
             direcao = DIRECAO_OESTE;
             return;
         }
-        speedX = -maxSpeed * cos(roty*PI/180);
+        speedX = -maxSpeed * cos(ZERO*PI/180);
         speedZ = 0;
     }
     if (rightPressed) {
@@ -860,7 +860,7 @@ void updateState2D() {
             direcao = DIRECAO_LESTE;
             return;
         }
-        speedX = maxSpeed * cos(roty*PI/180);
+        speedX = maxSpeed * cos(ZERO*PI/180);
         speedZ = 0;
     }
     if (upPressed) {
@@ -869,7 +869,7 @@ void updateState2D() {
             return;
         }
         speedX = 0;
-        speedZ = -maxSpeed * cos(roty*PI/180);
+        speedZ = -maxSpeed * cos(ZERO*PI/180);
     }
     if (downPressed) {
         if(direcao != DIRECAO_SUL){
@@ -877,7 +877,7 @@ void updateState2D() {
             return;
         }
         speedX = 0;
-        speedZ = maxSpeed * cos(roty*PI/180);
+        speedZ = maxSpeed * cos(ZERO*PI/180);
     }
 
     if(leftPressed || rightPressed || upPressed || downPressed){
@@ -1051,7 +1051,7 @@ void onKeyDown(unsigned char key, int x, int y) {
 	switch (key) {
 		case 32: //space
 			spacePressed = true;
-            printf("Direcao Rachadura %f \t %d\n",roty, direcao);
+            printf("Direcao Rachadura %f \t %d \t %f %f %f %f \n",roty, direcao, posX ,posZ, nextPosX, nextPosZ);
 
 			acaoCriarRachadura();
 			break;
