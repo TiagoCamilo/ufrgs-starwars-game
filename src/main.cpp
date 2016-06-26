@@ -56,8 +56,10 @@ seja uma spotlight;
 
 #define ESCALA_JOGADOR 3
 #define ESCALA_INIMIGO 3
+#define ESCALA_BLOCO 0.3
 #define ALTURA_JOGADOR 0.6
 #define ALTURA_INIMIGO 0.6
+#define ALTURA_BLOCO 1
 
 #define MORTO 0
 #define VIVO 1
@@ -68,11 +70,11 @@ seja uma spotlight;
 #define DIRECAO_OESTE 3
 
 #define MIN_MOVIMENTOS_DIRECAO 5
-#define MIN_DISTANCIA_PERSEGUICAO 0
+#define MIN_DISTANCIA_PERSEGUICAO 4
 #define TURNOS_IMUNIDADE 100
 #define EMPURRAR_DISTANCIA 2
 
-// Constantes do mapa
+// Constantes do mapan
 #define VAZIO 0
 #define BLOCO 1
 #define RACHADURA 2
@@ -271,11 +273,23 @@ typedef struct inimigo {
     GLMmodel *modelInimigo;
 } inimigo_t;
 
+
+typedef struct bloco {
+    float x;
+    float y;
+    float z;
+    GLMmodel *modelBloco;
+} bloco_t;
+
 inimigo_t *inimigo[MAXIMO_INIMIGOS];
+bloco_t *bloco[10];
+
+
 int quantidade_inimigos = -1;
+int quantidade_blocos = -1;
 
 // Aux function to load the object using GLM and apply some functions
-bool C3DObject_Load_New(const char *pszFilename, GLMmodel **model, int tipoElemento){
+bool C3DObject_Load_New(const char *pszFilename, GLMmodel **model, float escalaElemento){
     char aszFilename[256];
     strcpy(aszFilename, pszFilename);
 
@@ -290,10 +304,7 @@ bool C3DObject_Load_New(const char *pszFilename, GLMmodel **model, int tipoEleme
     return false;
 
     glmUnitize(*model);
-    if(tipoElemento == JOGADOR)
-        glmScale(*model,ESCALA_JOGADOR); // USED TO SCALE THE OBJECT
-    else
-        glmScale(*model,ESCALA_INIMIGO);
+    glmScale(*model,escalaElemento); // USED TO SCALE THE OBJECT
     glmFacetNormals(*model);
     glmVertexNormals(*model, 90.0);
 
@@ -411,11 +422,16 @@ void mainInit() {
 void initModel() {
 	printf("Loading models.. \n");
 
-	C3DObject_Load_New("TIE-fighter-Inimigo.obj",&modelSphere, JOGADOR);
+	C3DObject_Load_New("TIE-fighter-Jogador.obj",&modelSphere, ESCALA_JOGADOR);
 
     int i;
     for(i = 0 ; i <= quantidade_inimigos ; i++){
-        C3DObject_Load_New("TIE-fighter.obj",&inimigo[i]->modelInimigo, INIMIGO);
+        C3DObject_Load_New("TIE-fighter-Inimigo.obj",&inimigo[i]->modelInimigo, ESCALA_INIMIGO);
+    }
+
+    for(i = 0 ; i <= quantidade_blocos ; i++){
+            printf("Bloco%d",i);
+        C3DObject_Load_New("ball.obj",&bloco[i]->modelBloco, ESCALA_BLOCO);
     }
 	printf("Models ok. \n \n \n");
 }
@@ -524,6 +540,17 @@ void initMap(void){
                     if( ptrSuperior[2] == COR_RACHADURA_R && ptrSuperior[1] == COR_RACHADURA_G && ptrSuperior[0] == COR_RACHADURA_B){
                         mapaElementos[j][k] = RACHADURA;
                         mapaGrupo[j][k] = VAZIO;
+                    }
+
+                    if( ptrSuperior[2] == COR_BLOCO_R && ptrSuperior[1] == COR_BLOCO_G && ptrSuperior[0] == COR_BLOCO_B){
+                        quantidade_blocos++;
+                        mapaElementos[j][k] = BLOCO;
+                        bloco[quantidade_blocos] = (bloco_t*)malloc(sizeof(bloco_t));
+                        bloco[quantidade_blocos]->modelBloco = NULL;
+                        bloco[quantidade_blocos]->x = (j - 10)+0.5;
+                        bloco[quantidade_blocos]->z = (k - 10)+0.5;
+                        bloco[quantidade_blocos]->y = ALTURA_BLOCO;
+
                     }
                     if( ptrSuperior[2] == COR_INIMIGO_R && ptrSuperior[1] == COR_INIMIGO_G && ptrSuperior[0] == COR_INIMIGO_B){
                         quantidade_inimigos++;
@@ -708,12 +735,22 @@ void renderScene() {
         glPopMatrix();
     }
 
+    for(i = 0 ; i <= quantidade_blocos ; i++){
+        glPushMatrix();
+            glTranslatef(bloco[i]->x,bloco[i]->y,bloco[i]->z);
+            glmDraw(bloco[i]->modelBloco, GLM_SMOOTH | GLM_MATERIAL);
+        glPopMatrix();
+
+    }
+
     // binds the bmp file already loaded to the OpenGL parameters
 
 	renderFloor(BLOCO, TEXTURA_GRAMA, FALSE);
 	renderFloor(VAZIO, TEXTURA_AGUA, FALSE);
 	renderFloor(INIMIGO, TEXTURA_GRAMA, TRUE);
 	renderFloor(JOGADOR, TEXTURA_GRAMA, TRUE);
+    renderFloor(BLOCO, TEXTURA_GRAMA, TRUE);
+
 	renderFloor(BURACO, TEXTURA_BURACO, TRUE);
     renderFloor(RACHADURA, TEXTURA_RACHADURA, TRUE);
 }
@@ -766,7 +803,7 @@ void updateInimigoState(){
         // Verifica se a nova posicao calculada é valida
         j = inimigo[i]->x + iSpeedX + 10;
         k = inimigo[i]->z + iSpeedZ + 10;
-        if(mapaCenario[j][k] == VAZIO || mapaElementos[j][k] == BURACO || mapaElementos[j][k] == RACHADURA){
+        if(mapaCenario[j][k] == VAZIO || mapaElementos[j][k] == BURACO || mapaElementos[j][k] == RACHADURA || mapaElementos[j][k] == BLOCO){
             continue;
         }
         for(l = 0 ; l <= quantidade_inimigos; l++){
@@ -887,7 +924,7 @@ void updateState2D() {
 
         int j = nextPosX + 10;
         int k = nextPosZ + 10;
-        if(mapaCenario[j][k] == BLOCO){
+        if(mapaCenario[j][k] == BLOCO && mapaElementos[j][k] != BLOCO){
             //posX = floor(nextPosX)+0.5;
             posX = nextPosX;
             //posZ = floor(nextPosZ)+0.5;
@@ -1052,7 +1089,7 @@ void onKeyDown(unsigned char key, int x, int y) {
 	switch (key) {
 		case 32: //space
 			spacePressed = true;
-            printf("Direcao Rachadura %f \t %d \t %f %f %f %f \n",roty, direcao, posX ,posZ, nextPosX, nextPosZ);
+            //printf("Direcao Rachadura %f \t %d \t %f %f %f %f \n",roty, direcao, posX ,posZ, nextPosX, nextPosZ);
 
 			acaoCriarRachadura();
 			break;
@@ -1308,7 +1345,10 @@ void desmoronarMapa(int grupo){
 }
 
 void gerenciarColisao(int posicaoCenario, int posicaoElemento){
-    //printf("Colisao \t\t Cenario: %d \t Elemento: %d \n",posicaoCenario, posicaoElemento);
+    printf("Colisao \t\t Cenario: %d \t Elemento: %d \n",posicaoCenario, posicaoElemento);
+    if(posicaoElemento == BLOCO){
+        return;
+    }
     if(posicaoCenario == VAZIO || posicaoElemento >= INIMIGO){
         resetStage();
     }
