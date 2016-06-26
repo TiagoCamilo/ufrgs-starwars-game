@@ -21,6 +21,11 @@ Space - Cria rachadura, somente se o personagem estiver em cima de um buraco
 
 O personagem esta em um mapa finito, e caso atravesse o limite do mapa será caraterizada "derrota".
 
+O mapa é composto por duas imagens BMP 20x20:
+
+* A primeira caracteriza o mapa inferior, neste caso define onde será "chão da nave" e onde será "espaço".
+* A segunda caracteriza o mapa superior, neste caso define a posição dos elementos listados abaixo.
+
 No mapa existem os elementos: 
 
 * Esfera
@@ -40,10 +45,6 @@ No mapa existem os elementos:
 * * A rachadura será criada até o próximo buraco ou o fim do mapa caso não exista buraco em seu caminho.
 * * Quando as rachaduras fecharem um "polígono" o menor polígono será "desmoronado".
 * * * Neste caso foi utilizado o algoritmo recursivo "FloodFill" para contar a quantidade de casas em cada polígono, identificando assim o menor.
-
-O mapa é composto por duas imagens BMP 20x20:
-* A primeira caracteriza o mapa inferior, neste caso define onde será "chão da nave" e onde será "espaço".
-* A segunda caracteriza o mapa superior, neste caso define a posição dos elementos citados acima [Inimigos, Blocos, Buracos, Rachaduras e posição inicial do Jogador].
 
 
 
