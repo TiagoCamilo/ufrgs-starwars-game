@@ -2,8 +2,10 @@
 *Prof. Marcelo Walter*
 
 **Objetivo:**
+
 Desenvolver um jogo com a mecânica semelhante ao jogo Dig Dug II.
 Utilizando tecnologia OpenGL alinhado aos conhecimento adquiridos no decorrer do semestre.
+
 
 
 
