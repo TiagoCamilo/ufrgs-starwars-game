@@ -393,7 +393,7 @@ void mainInit() {
 	// habilita o z-buffer
 	glEnable(GL_DEPTH_TEST);
 
-    initSound();
+    //initSound();
 
     initTexture("textura-espaco.bmp", TEXTURA_AGUA);
     initTexture("textura-nave.bmp", TEXTURA_GRAMA);
@@ -410,17 +410,16 @@ void mainInit() {
 
 	enableFog();
 
-	printf("w - andar \n");
-	printf("s - ir pra tras \n");
-	printf("mouse - direcao \n");
-	printf("r - correr \n");
-	printf("c - abaixar \n");
-	printf("espaco - pular \n");
+	printf("W - Movimentar para Frente \n");
+	printf("S - Movimentar para Trás  \n");
+	printf("A - Movimentar para Esquerda/Girar Camera \n");
+	printf("D - Movimentar para Direita/Girar Camera \n");
+	printf("Espaco - Criar Rachadura, somente permitido em cima de um buraco \n");
 
 }
 
 void initModel() {
-	printf("Loading models.. \n");
+	//printf("Loading models.. \n");
 
 	C3DObject_Load_New("TIE-fighter-Jogador.obj",&modelSphere, ESCALA_JOGADOR);
 
@@ -430,10 +429,9 @@ void initModel() {
     }
 
     for(i = 0 ; i <= quantidade_blocos ; i++){
-            printf("Bloco%d",i);
         C3DObject_Load_New("ball.obj",&bloco[i]->modelBloco, ESCALA_BLOCO);
     }
-	printf("Models ok. \n \n \n");
+	//printf("Models ok. \n \n \n");
 }
 
 /**
@@ -441,7 +439,7 @@ Initialize openal and check for errors
 */
 void initSound() {
 
-	printf("Initializing OpenAl \n");
+	//printf("Initializing OpenAl \n");
 
 	// Init openAL
 	alutInit(0, NULL);
@@ -496,12 +494,12 @@ void initSound() {
     alSourcei(source[0], AL_BUFFER,buffer[0]);
     alSourcei(source[0], AL_LOOPING, AL_TRUE);
 
-	printf("Sound ok! \n\n");
+	//printf("Sound ok! \n\n");
 }
 
 
 void initMap(void){
-    printf ("\nLoading map..\n");
+    //printf ("\nLoading map..\n");
     // Load a texture object (256x256 true color)
     bitsInferior = LoadDIBitmap("mapaInferior.bmp", &infoInferior);
     if (bitsInferior == (GLubyte *)0) {
@@ -581,7 +579,7 @@ void initMap(void){
                     ptrInferior += 3;
         }
     }
-    printf("map ok! \n\n");
+    //printf("map ok! \n\n");
 
 }
 
@@ -602,7 +600,7 @@ void debugMap(){
 Initialize the texture using the library bitmap
 */
 void initTexture(char *textureName, int texturaValor){
-    printf ("\nLoading texture..\n");
+    //printf ("\nLoading texture..\n");
     // Load a texture object (256x256 true color)
     bits = LoadDIBitmap(textureName, &info);
     if (bits == (GLubyte *)0) {
@@ -644,7 +642,7 @@ void initTexture(char *textureName, int texturaValor){
     glTexImage2D(type, 0, 4, info->bmiHeader.biWidth, info->bmiHeader.biHeight,0, GL_RGBA, GL_UNSIGNED_BYTE, rgba );
 
 
-    printf("Textura %d\n", texture[quantidade_texturas]);
+    //printf("Textura %d\n", texture[quantidade_texturas]);
 
 }
 
@@ -1224,7 +1222,7 @@ void acaoEmpurrar(){
         //mapaElementos[jEmpurrar][kEmpurrar] = INIMIGO;
 
     }
-    printf("Empurrar %d %d \n", jEmpurrar, kEmpurrar);
+    //printf("Empurrar %d %d \n", jEmpurrar, kEmpurrar);
 }
 
 int acaoCriarRachadura(){
@@ -1241,7 +1239,7 @@ int acaoCriarRachadura(){
         if(roty == 180.0f) direcaoRachadura = DIRECAO_SUL;
         if(roty == 270.0f) direcaoRachadura = DIRECAO_OESTE;
     }
-    printf("Direcao Rachadura %f \t %d \t %d\n",roty, direcao, direcaoRachadura);
+    //printf("Direcao Rachadura %f \t %d \t %d\n",roty, direcao, direcaoRachadura);
     int rSpeedX, rSpeedZ;
     rSpeedX = rSpeedZ = 0;
 
@@ -1345,7 +1343,7 @@ void desmoronarMapa(int grupo){
 }
 
 void gerenciarColisao(int posicaoCenario, int posicaoElemento){
-    printf("Colisao \t\t Cenario: %d \t Elemento: %d \n",posicaoCenario, posicaoElemento);
+    //printf("Colisao \t\t Cenario: %d \t Elemento: %d \n",posicaoCenario, posicaoElemento);
     if(posicaoElemento == BLOCO){
         return;
     }

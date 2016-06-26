@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug" />
+	<File name="..\..\src\Texture.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="12643" topLine="0" />
+		</Cursor>
+	</File>
 	<File name="..\..\src\glm.cpp" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="6304" topLine="274" />
@@ -13,38 +18,12 @@
 	</File>
 	<File name="..\..\src\main.cpp" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1776" topLine="270" />
+			<Cursor1 position="10584" topLine="328" />
 		</Cursor>
 		<Folding>
+			<Collapse line="291" />
 			<Collapse line="313" />
 			<Collapse line="329" />
-			<Collapse line="362" />
-			<Collapse line="378" />
-			<Collapse line="441" />
-			<Collapse line="587" />
-			<Collapse line="603" />
-			<Collapse line="654" />
-			<Collapse line="756" />
-			<Collapse line="841" />
-			<Collapse line="847" />
-			<Collapse line="884" />
-			<Collapse line="938" />
-			<Collapse line="1004" />
-			<Collapse line="1021" />
-			<Collapse line="1034" />
-			<Collapse line="1268" />
-			<Collapse line="1313" />
-			<Collapse line="1345" />
-			<Collapse line="1353" />
-			<Collapse line="1370" />
-			<Collapse line="1382" />
-			<Collapse line="1392" />
-			<Collapse line="1402" />
 		</Folding>
-	</File>
-	<File name="..\..\src\Texture.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="12643" topLine="0" />
-		</Cursor>
 	</File>
 </CodeBlocks_layout_file>
