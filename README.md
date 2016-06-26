@@ -11,15 +11,16 @@ Utilizando tecnologia OpenGL alinhado aos conhecimento adquiridos no decorrer do
 
 **Descrição Geral:**
 
-O jogo possui 3 tipos de "visão": 2D, 1ª Pessoa e 3ª Pessoa
+O jogo possui 3 tipos de "visão": 2D, 1ª Pessoa e 3ª Pessoa.
 
 Controles:
-W - Movimenta para frente
-S - Movimenta para tras
-A - Movimenta para Esquerda [2D e 3ª Pessoa]  | Gira camera 90º Esquerda [1ª Pessoa]
-D - Movimenta para Direita [2D e 3ª Pessoa]  | Gira camera 90º Direita [1ª Pessoa]
-V - Alterna modo de jogo entre 2D, 1ª Pessoa e 3ª Pessoa
-Space - Cria rachadura, somente se o personagem estiver em cima de um buraco
+
+* W - Movimenta para frente.
+* S - Movimenta para trás.
+* A - Movimenta para Esquerda [2D e 3ª Pessoa]  | Gira camera 90º Esquerda [1ª Pessoa].
+* D - Movimenta para Direita [2D e 3ª Pessoa]  | Gira camera 90º Direita [1ª Pessoa].
+* V - Alterna modo de jogo entre 2D, 1ª Pessoa e 3ª Pessoa.
+* Space - Cria rachadura, somente se o personagem estiver em cima de um buraco.
 
 O personagem esta em um mapa finito, e caso atravesse o limite do mapa será caraterizada "derrota".
 
