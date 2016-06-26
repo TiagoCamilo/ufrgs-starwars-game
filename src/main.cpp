@@ -205,7 +205,7 @@ variavel auxiliar pra dar variação na altura do ponto de vista ao andar.
 float headPosAux = 0.0f;
 
 float maxSpeed = 0.25f;
-float maxInimigoSpeed = 0.025f;
+float maxInimigoSpeed = 0.05f;
 
 float planeSize = 20.0f;
 
@@ -414,6 +414,7 @@ void mainInit() {
 	printf("S - Movimentar para Trás  \n");
 	printf("A - Movimentar para Esquerda/Girar Camera \n");
 	printf("D - Movimentar para Direita/Girar Camera \n");
+	printf("V - Alterar modo de camera \n");
 	printf("Espaco - Criar Rachadura, somente permitido em cima de um buraco \n");
 
 }
